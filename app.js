@@ -1,0 +1,233 @@
+document.addEventListener('DOMContentLoaded', () => {
+  
+  // --- 1. Interactive ROI Calculator Logic ---
+  const employeesInput = document.getElementById('employees-input');
+  const hoursInput = document.getElementById('hours-input');
+  const rateInput = document.getElementById('rate-input');
+
+  const employeesVal = document.getElementById('employees-val');
+  const hoursVal = document.getElementById('hours-val');
+  const rateVal = document.getElementById('rate-val');
+
+  const resultHours = document.getElementById('result-hours');
+  const resultCash = document.getElementById('result-cash');
+  const resultRoi = document.getElementById('result-roi');
+
+  function calculateROI() {
+    const employees = parseInt(employeesInput.value, 10);
+    const hoursWasted = parseInt(hoursInput.value, 10);
+    const hourlyRate = parseInt(rateInput.value, 10);
+
+    // Update Slider Value Texts
+    employeesVal.textContent = employees;
+    hoursVal.textContent = `${hoursWasted} hrs`;
+    rateVal.textContent = `$${hourlyRate}/hr`;
+
+    // Calculations
+    const weeklyHoursWasted = employees * hoursWasted;
+    const annualHoursWasted = weeklyHoursWasted * 52;
+    const annualCashLeakage = annualHoursWasted * hourlyRate;
+
+    // Estimate conservative 40% AI efficiency improvement (hours saved / processes optimized)
+    const efficiencyImprovement = 0.40;
+    const annualSavings = annualCashLeakage * efficiencyImprovement;
+
+    // Determine audit cost dynamically based on employee threshold
+    // SMB (<= 50 employees) = $5,000, Enterprise (> 50 employees) = $20,000
+    const auditCost = (employees <= 50) ? 5000 : 20000;
+
+    // Year 1 Net ROI
+    const netReturn = annualSavings - auditCost;
+    const roiPercentage = (netReturn / auditCost) * 100;
+
+    // Format and Render Outputs
+    resultHours.textContent = `${Math.round(annualHoursWasted).toLocaleString()} hrs`;
+    resultCash.textContent = `$${Math.round(annualCashLeakage).toLocaleString()}`;
+    
+    if (roiPercentage > 0) {
+      resultRoi.textContent = `${Math.round(roiPercentage).toLocaleString()}%`;
+      resultRoi.style.color = 'var(--accent-cyan)';
+    } else {
+      resultRoi.textContent = 'N/A';
+      resultRoi.style.color = 'var(--text-dim)';
+    }
+  }
+
+  // Bind Events for Sliders
+  if (employeesInput && hoursInput && rateInput) {
+    employeesInput.addEventListener('input', calculateROI);
+    hoursInput.addEventListener('input', calculateROI);
+    rateInput.addEventListener('input', calculateROI);
+    // Initial Run
+    calculateROI();
+  }
+
+  // --- 2. Dynamic Form Select Syncing ---
+  const companySizeSelect = document.getElementById('client-size');
+  const auditPackageSelect = document.getElementById('client-package');
+
+  if (companySizeSelect && auditPackageSelect) {
+    companySizeSelect.addEventListener('change', () => {
+      const selectedSize = companySizeSelect.value;
+      if (selectedSize === 'smb') {
+        auditPackageSelect.value = 'smb-audit';
+      } else if (selectedSize === 'enterprise') {
+        auditPackageSelect.value = 'ent-audit';
+      }
+    });
+
+    auditPackageSelect.addEventListener('change', () => {
+      const selectedPackage = auditPackageSelect.value;
+      if (selectedPackage === 'smb-audit') {
+        companySizeSelect.value = 'smb';
+      } else if (selectedPackage === 'ent-audit') {
+        companySizeSelect.value = 'enterprise';
+      }
+    });
+  }
+
+  // --- 3. Form Submission Simulation ---
+  const bookingForm = document.getElementById('audit-booking-form');
+  const successMessage = document.getElementById('booking-success-message');
+  const bookingTitle = document.getElementById('booking-title');
+  const bookingSubtitle = document.getElementById('booking-subtitle');
+
+  if (bookingForm && successMessage) {
+    bookingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Collect data (simulated submission)
+      const data = {
+        name: document.getElementById('client-name').value,
+        email: document.getElementById('client-email').value,
+        company: document.getElementById('client-company').value,
+        size: companySizeSelect.value,
+        industry: document.getElementById('client-industry').value,
+        package: auditPackageSelect.value,
+        message: document.getElementById('client-message').value
+      };
+
+      console.log('Form Submitted successfully:', data);
+
+      // Save lead to localStorage for local demo simulation
+      let currentLeads = JSON.parse(localStorage.getItem('madlabz_leads') || '[]');
+      currentLeads.push(data);
+      localStorage.setItem('madlabz_leads', JSON.stringify(currentLeads));
+
+      // Re-render the simulated CRM database
+      renderLeadsTable();
+
+      // Animation: Fade out form and headers, Fade in success message
+      bookingForm.style.transition = 'opacity 0.4s ease';
+      bookingForm.style.opacity = '0';
+      if (bookingTitle) {
+        bookingTitle.style.transition = 'opacity 0.4s ease';
+        bookingTitle.style.opacity = '0';
+      }
+      if (bookingSubtitle) {
+        bookingSubtitle.style.transition = 'opacity 0.4s ease';
+        bookingSubtitle.style.opacity = '0';
+      }
+      
+      setTimeout(() => {
+        bookingForm.style.display = 'none';
+        if (bookingTitle) bookingTitle.style.display = 'none';
+        if (bookingSubtitle) bookingSubtitle.style.display = 'none';
+        
+        successMessage.style.display = 'block';
+        successMessage.style.opacity = '0';
+        successMessage.style.transition = 'opacity 0.4s ease';
+        
+        // Trigger reflow to apply transitions
+        successMessage.offsetHeight;
+        successMessage.style.opacity = '1';
+      }, 400);
+    });
+  }
+
+  // --- 4. Intersection Observer for Scroll Animations ---
+  const reveals = document.querySelectorAll('.reveal');
+  
+  const revealCallback = (entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        // Unobserve once triggered to keep page lightweight
+        observer.unobserve(entry.target);
+      }
+    });
+  };
+
+  const revealObserver = new IntersectionObserver(revealCallback, {
+    root: null, // viewport
+    threshold: 0.15, // 15% visibility trigger
+    rootMargin: '0px 0px -50px 0px' // offset bottom trigger slightly
+  });
+
+  reveals.forEach(element => {
+    revealObserver.observe(element);
+  });
+
+  // --- 5. Navigation Bar Background on Scroll ---
+  const header = document.getElementById('site-header');
+  if (header) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.style.top = '0';
+        header.querySelector('.nav-bar').style.borderRadius = '0';
+        header.querySelector('.nav-bar').style.borderLeft = 'none';
+        header.querySelector('.nav-bar').style.borderRight = 'none';
+        header.querySelector('.nav-bar').style.borderTop = 'none';
+      } else {
+        header.style.top = '1.5rem';
+        header.querySelector('.nav-bar').style.borderRadius = '100px';
+        header.querySelector('.nav-bar').style.border = '1px solid var(--glass-border)';
+      }
+    });
+  }
+
+  // --- 6. Simulated Lead Database Render ---
+  function renderLeadsTable() {
+    const tableBody = document.getElementById('leads-table-body');
+    if (!tableBody) return;
+
+    const leads = JSON.parse(localStorage.getItem('madlabz_leads') || '[]');
+    
+    if (leads.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6" style="padding: 2rem; text-align: center;" id="no-leads-row">No leads captured yet. Fill in and submit the booking form above to populate this simulated database.</td>
+        </tr>
+      `;
+      return;
+    }
+
+    tableBody.innerHTML = leads.map(lead => {
+      const packageLabel = lead.package === 'smb-audit' ? 'SMB Audit (From $5,000)' : 'Enterprise Audit (From $20,000)';
+      const industryLabel = lead.industry.charAt(0).toUpperCase() + lead.industry.slice(1);
+      
+      return `
+        <tr style="border-bottom: 1px solid var(--glass-border);">
+          <td style="padding: 1rem; color: var(--text-main); font-weight: 500;">${escapeHtml(lead.name)}</td>
+          <td style="padding: 1rem;">${escapeHtml(lead.email)}</td>
+          <td style="padding: 1rem;">${escapeHtml(lead.company)}</td>
+          <td style="padding: 1rem;">${escapeHtml(industryLabel)}</td>
+          <td style="padding: 1rem; color: var(--accent-cyan);">${packageLabel}</td>
+          <td style="padding: 1rem; font-size: 0.9rem; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(lead.message)}">${escapeHtml(lead.message || 'N/A')}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+  }
+
+  // Initial render of leads table
+  renderLeadsTable();
+});

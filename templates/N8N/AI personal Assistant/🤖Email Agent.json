@@ -1,0 +1,241 @@
+{
+  "name": "🤖Email Agent",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "508f9738-c406-4431-812a-b9d08d29beca",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        176,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1-mini",
+        "options": {}
+      },
+      "id": "6f141e67-6061-46ab-b476-2e6ec989fd2d",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        272,
+        48
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "mfy5MQakuAKWhUNd",
+          "name": "OpenAi TRAINING"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7ab380a2-a8d3-421c-ab4e-748ea8fb7904",
+              "name": "response",
+              "value": "Unable to perform task. Please try again.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7da87ec2-88fc-447e-9b20-93de446bd3f0",
+      "name": "Try Again",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        928,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $fromAI(\"email\",\"the email of a contact\") }}",
+        "subject": "={{ $fromAI(\"subject\",\"the subject for the email\") }}",
+        "emailType": "text",
+        "message": "={{ $fromAI(\"emailbody\",\"the body message of the email\") }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "0a519a75-94cc-4720-9d02-a3dfe6e0e970",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        512,
+        48
+      ],
+      "webhookId": "14ae328d-1e6d-4126-a9da-9a430425d7e9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BsI0hxgbfjprQ7Am",
+          "name": "Gmail account TRAINING"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": "={{$fromAI(\"limit\",\"how many emails the user asked for\")}}",
+        "simple": false,
+        "filters": {
+          "sender": "={{$fromAI(\"senderEmail\",\"who the user is asking for emails from\")}}"
+        },
+        "options": {}
+      },
+      "id": "3b13d318-65a1-4c27-9e42-f6af8bc424d1",
+      "name": "Get Messages",
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        656,
+        48
+      ],
+      "webhookId": "fdcb7c17-e120-4653-a119-8f5c7483cca5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BsI0hxgbfjprQ7Am",
+          "name": "Gmail account TRAINING"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "39c2f302-03be-4464-a17a-d7cc481d6d44",
+              "name": "=response",
+              "value": "={{$json.output}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "024dad34-7df0-47fd-9a28-e0ed69664767",
+      "name": "Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        928,
+        -336
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.query}}",
+        "options": {
+          "systemMessage": "You are a helpful assistant. \n\nIf a number of emails isn't specified, just assume it will be 5.\n\nWhen sending an email, always sign it off from Andrew, never include something like [Your Name]"
+        }
+      },
+      "id": "69cb18f2-ab79-453a-ae13-1af457bea7d9",
+      "name": "Email Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        400,
+        -240
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Make Sure Right Gmail Credential Connected"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        816,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "691a2ef7-4eba-44e2-ba06-4d1fe239a50c",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Email Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Email Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Messages": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Agent": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Try Again",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "335af58b-233e-4942-ad09-f787e6e128e2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "80992d3a6cc90f3ecbce437fbbc03bf0e18ec178ea803e3147e731aec47908c5"
+  },
+  "id": "ceZE1GCoGj2WjMMQ",
+  "tags": []
+}

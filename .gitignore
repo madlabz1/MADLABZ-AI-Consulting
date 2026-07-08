@@ -1,0 +1,6 @@
+__pycache__/
+venv/
+.system_generated/
+.gemini/
+get_transcript.py
+transcript.txt

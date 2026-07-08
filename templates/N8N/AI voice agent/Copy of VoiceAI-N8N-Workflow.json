@@ -1,0 +1,895 @@
+{
+  "name": "Workflow-1-AI-Voice-Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Send SMS verification code - for booking confirmation",
+        "height": 256,
+        "width": 896
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -848,
+        1456
+      ],
+      "typeVersion": 1,
+      "id": "0f4431ab-4466-4c49-91d4-51c0cbca1c54",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Book appointment in calendar",
+        "height": 256,
+        "width": 896,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -848,
+        1712
+      ],
+      "typeVersion": 1,
+      "id": "3bade3a7-6b6e-451a-99b8-d44eb8aa11fc",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Confirm takeout order\n",
+        "height": 256,
+        "width": 896,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -848,
+        1968
+      ],
+      "typeVersion": 1,
+      "id": "15084d7c-644a-4e74-adfb-5992805db931",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vapi-appointment-setter-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f7a6194c-4975-4f79-b969-95332e36553a",
+      "name": "VAPI Tool Call Webhook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        1792
+      ],
+      "webhookId": "vapi-appointment-setter-webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"result\": \"A 4-digit verification code has been sent to your number.\" } }}",
+        "options": {}
+      },
+      "id": "44406c5e-e03a-45cb-a7e1-6b99b8c8656d",
+      "name": "1b. Respond: Code Sent1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -448,
+        1536
+      ]
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "augastya.arora.io@gmail.com",
+          "mode": "list",
+          "cachedResultName": "augastya.arora.io@gmail.com"
+        },
+        "start": "={{ $json.body.message.toolCalls[0].function.arguments.date + 'T' + $json.body.message.toolCalls[0].function.arguments.time }}",
+        "end": "={{ $json.body.message.toolCalls[0].function.arguments.date + 'T' + $json.body.message.toolCalls[0].function.arguments.time }}",
+        "additionalFields": {
+          "description": "=Name: {{ $json.body.message.toolCalls[0].function.arguments.name }}\nPhone: {{ $('VAPI Tool Call Webhook1').item.json.body.message.customer.number }}\nParty Size: {{ $json.body.message.toolCalls[0].function.arguments.partySize }}",
+          "summary": "=Reservation for {{ $json.body.message.toolCalls[0].function.arguments.name }} ({{ $json.body.message.toolCalls[0].function.arguments.partySize }} people)"
+        }
+      },
+      "id": "6a562e11-ef02-4321-9fa6-3d7d79d77418",
+      "name": "3a. Create GCal Reservation1",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        -704,
+        1792
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "3dGQ8ETV1Bh6u5DY",
+          "name": "Google Calendar Pogan Cristian"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"result\": \"The reservation has been successfully booked.\" } }}",
+        "options": {}
+      },
+      "id": "ffd4925a-1642-4c9a-9fc1-4e7fd2289b04",
+      "name": "3b. Respond: Reservation Confirmed1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -432,
+        1792
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"result\": \"The takeout order has been placed successfully.\" } }}",
+        "options": {}
+      },
+      "id": "311a3c08-96a8-42dc-8acb-4869abeb62b4",
+      "name": "4. Respond: Takeout Confirmed1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -704,
+        2064
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.message.toolCalls[0].function.name }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "send_sms",
+                    "id": "70209fd3-a4b2-4072-8a7d-d66dd34f1ad1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "send_sms"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.message.toolCalls[0].function.name }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "create_reservation",
+                    "id": "1a5abb33-4ab0-4ada-8e25-2caf445a7639"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "create_reservation"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.message.toolCalls[0].function.name }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "create_takeout_order",
+                    "id": "8032b86c-43d7-40e9-be5d-650157dab35b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "create_takeout_order"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "63939d39-2051-41df-aee5-09e6ed5f3cac",
+      "name": "Route by Tool Name",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1104,
+        1776
+      ]
+    },
+    {
+      "parameters": {
+        "from": "+16802062785",
+        "to": "={{ $('VAPI Tool Call Webhook1').item.json.body.message.customer.number }}",
+        "message": "=Thanks for trying DineAI’s Demo Restaurant!\nWe’re glad you got a feel for the voice assistant in action.\nWant to see how it could work for your restaurant?\nSchedule your free demo today: https://www.usedineai.com/blank\nWe’ll follow up with you shortly.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        1536
+      ],
+      "id": "a589fc82-620f-45f1-ba9a-c175b090d074",
+      "name": "Send an SMS/MMS/WhatsApp message1",
+      "credentials": {
+        "twilioApi": {
+          "id": "U7mQeEoDUO9vdgeZ",
+          "name": "Twilio Pogan Cristian"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "VAPI Tool Call Webhook1": [
+      {
+        "json": {
+          "headers": {
+            "host": "dineinc.app.n8n.cloud",
+            "user-agent": "axios/1.8.3",
+            "content-length": "17095",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, br",
+            "baggage": "sentry-environment=production,sentry-public_key=a0021577936aec367b16615ad816c078,sentry-trace_id=ecb5ea6f74104eb988025f20ca922e9e",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "34.209.209.214",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "US",
+            "cf-ray": "9786ff23f517a60a-PDX",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "cookie": "callId=34460abb-1600-4637-9e2e-ccdee8ac5667",
+            "sentry-trace": "ecb5ea6f74104eb988025f20ca922e9e-ba3130e41b7495e0",
+            "x-call-id": "34460abb-1600-4637-9e2e-ccdee8ac5667",
+            "x-forwarded-for": "34.209.209.214, 172.68.174.138",
+            "x-forwarded-host": "dineinc.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-77-7df8c744bc-s54zp",
+            "x-is-trusted": "yes",
+            "x-real-ip": "34.209.209.214",
+            "x-vapi-secret": ""
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "message": {
+              "timestamp": 1756753080930,
+              "type": "tool-calls",
+              "toolCalls": [
+                {
+                  "id": "call_0xrDoKYLDBCGJUi5JJLWnw4z",
+                  "type": "function",
+                  "function": {
+                    "name": "create_reservation",
+                    "arguments": {
+                      "date": "2025-09-02",
+                      "name": "Nick Aurora",
+                      "time": "16:00",
+                      "phone": "+10000000000",
+                      "partySize": 5
+                    }
+                  }
+                }
+              ],
+              "toolCallList": [
+                {
+                  "id": "call_0xrDoKYLDBCGJUi5JJLWnw4z",
+                  "type": "function",
+                  "function": {
+                    "name": "create_reservation",
+                    "arguments": {
+                      "date": "2025-09-02",
+                      "name": "Nick Aurora",
+                      "time": "16:00",
+                      "phone": "+10000000000",
+                      "partySize": 5
+                    }
+                  }
+                }
+              ],
+              "toolWithToolCallList": [
+                {
+                  "type": "function",
+                  "function": {
+                    "name": "create_reservation",
+                    "parameters": {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "phone",
+                        "date",
+                        "time",
+                        "partySize"
+                      ],
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "description": "The desired date of the reservation in ISO 8601 format (YYYY-MM-DD)."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The full name of the person making the reservation."
+                        },
+                        "time": {
+                          "type": "string",
+                          "description": "The desired time of the reservation in 24-hour format (HH:MM)."
+                        },
+                        "phone": {
+                          "type": "string",
+                          "description": "The phone number of the person, in E.164 format."
+                        },
+                        "partySize": {
+                          "type": "number",
+                          "description": "The number of people in the party."
+                        }
+                      }
+                    },
+                    "description": "Finalizes and books a table reservation in the system."
+                  },
+                  "server": {
+                    "url": "https://dineinc.app.n8n.cloud/webhook/vapi-appointment-setter-webhook",
+                    "headers": {}
+                  },
+                  "messages": [
+                    {
+                      "type": "request-start",
+                      "contents": [],
+                      "conditions": [],
+                      "blocking": false
+                    }
+                  ],
+                  "toolCall": {
+                    "id": "call_0xrDoKYLDBCGJUi5JJLWnw4z",
+                    "type": "function",
+                    "function": {
+                      "name": "create_reservation",
+                      "arguments": {
+                        "date": "2025-09-02",
+                        "name": "Nick Aurora",
+                        "time": "16:00",
+                        "phone": "+10000000000",
+                        "partySize": 5
+                      }
+                    }
+                  }
+                }
+              ],
+              "artifact": {
+                "messages": [
+                  {
+                    "role": "system",
+                    "message": "# DineAI Assistant System Message\n\n## Core Identity\nYou are a helpful, friendly AI assistant designed to have natural, human-like conversations over the phone. You speak clearly, naturally, and conversationally as if talking to a friend.\n\n# --- CORE APPROACH ---\nHelp customers with reservations, takeout orders, and general questions. \n- Use the customer's phone number when booking reservations, placing orders, or sending SMS confirmations\n- NEVER ask the caller for their phone number - you already have it\n- NEVER ask for verification of their phone number or last 4 digits\n\n## Conversation Guidelines\n\n### Communication Style\n- Speak naturally and conversationally, like a helpful human\n- Keep responses concise but complete - aim for 1-3 sentences typically\n- Use a warm, professional yet friendly tone\n- Speak at a natural pace, not too fast or slow\n- Use everyday language, avoid robotic or overly formal speech\n\n### Response Timing\n- ALWAYS wait for the user to completely finish speaking b...",
+                    "time": 1756753048549,
+                    "secondsFromStart": 0
+                  },
+                  {
+                    "role": "bot",
+                    "message": "Hi there. Welcome to DNA Eye's demo restaurant. How can I help you today?",
+                    "time": 1756753051236,
+                    "endTime": 1756753056815.999,
+                    "secondsFromStart": 2.56,
+                    "duration": 4559.9990234375,
+                    "source": ""
+                  },
+                  {
+                    "role": "user",
+                    "message": "Hi. Uh, I just wanted to book a reservation.",
+                    "time": 1756753058966,
+                    "endTime": 1756753062086,
+                    "secondsFromStart": 10.29,
+                    "duration": 3120
+                  },
+                  {
+                    "role": "bot",
+                    "message": "Absolutely. I can help with that. What date time, and party size are you looking for, and what name should I put the reservation under?",
+                    "time": 1756753063616,
+                    "endTime": 1756753071606,
+                    "secondsFromStart": 14.94,
+                    "duration": 7680.0009765625,
+                    "source": ""
+                  },
+                  {
+                    "role": "user",
+                    "message": "The date tomorrow, September second, at 4 PM.",
+                    "time": 1756753072986,
+                    "endTime": 1756753076666,
+                    "secondsFromStart": 24.31,
+                    "duration": 3680
+                  },
+                  {
+                    "toolCalls": [
+                      {
+                        "id": "call_0xrDoKYLDBCGJUi5JJLWnw4z",
+                        "type": "function",
+                        "function": {
+                          "name": "create_reservation",
+                          "arguments": "{\n  \"date\": \"2025-09-02\",\n  \"name\": \"Nick Aurora\",\n  \"time\": \"16:00\",\n  \"phone\": \"+10000000000\",\n  \"partySize\": 5\n}"
+                        }
+                      }
+                    ],
+                    "role": "tool_calls",
+                    "message": "",
+                    "time": 1756753080927,
+                    "secondsFromStart": 32.328
+                  }
+                ],
+                "messagesOpenAIFormatted": [
+                  {
+                    "role": "system",
+                    "content": "# DineAI Assistant System Message\n\n## Core Identity\nYou are a helpful, friendly AI assistant designed to have natural, human-like conversations over the phone. You speak clearly, naturally, and conversationally as if talking to a friend.\n\n# --- CORE APPROACH ---\nHelp customers with reservations, takeout orders, and general questions. \n- Use the customer's phone number when booking reservations, placing orders, or sending SMS confirmations\n- NEVER ask the caller for their phone number - you already have it\n- NEVER ask for verification of their phone number or last 4 digits\n\n## Conversation Guidelines\n\n### Communication Style\n- Speak naturally and conversationally, like a helpful human\n- Keep responses concise but complete - aim for 1-3 sentences typically\n- Use a warm, professional yet friendly tone\n- Speak at a natural pace, not too fast or slow\n- Use everyday language, avoid robotic or overly formal speech\n\n### Response Timing\n- ALWAYS wait for the user to completely finish speaking b..."
+                  },
+                  {
+                    "role": "assistant",
+                    "content": "Hi there. Welcome to DNA Eye's demo restaurant. How can I help you today?"
+                  },
+                  {
+                    "role": "user",
+                    "content": "Hi. Uh, I just wanted to book a reservation."
+                  },
+                  {
+                    "role": "assistant",
+                    "content": "Absolutely. I can help with that. What date time, and party size are you looking for, and what name should I put the reservation under?"
+                  },
+                  {
+                    "role": "user",
+                    "content": "The date tomorrow, September second, at 4 PM."
+                  },
+                  {
+                    "role": "assistant",
+                    "tool_calls": [
+                      {
+                        "id": "call_0xrDoKYLDBCGJUi5JJLWnw4z",
+                        "type": "function",
+                        "function": {
+                          "name": "create_reservation",
+                          "arguments": "{\n  \"date\": \"2025-09-02\",\n  \"name\": \"Nick Aurora\",\n  \"time\": \"16:00\",\n  \"phone\": \"+10000000000\",\n  \"partySize\": 5\n}"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "role": "tool",
+                    "tool_call_id": "call_0xrDoKYLDBCGJUi5JJLWnw4z",
+                    "content": "Tool Result Still Pending But Proceed Further If Possible."
+                  }
+                ]
+              },
+              "call": {
+                "id": "34460abb-1600-4637-9e2e-ccdee8ac5667",
+                "orgId": "3b62121c-b5f1-4e42-99c9-91d162b0b195",
+                "createdAt": "2025-09-01T18:57:28.469Z",
+                "updatedAt": "2025-09-01T18:57:28.469Z",
+                "type": "inboundPhoneCall",
+                "cost": 0,
+                "monitor": {
+                  "listenUrl": "wss://phone-call-websocket.aws-us-west-2-backend-production1.vapi.ai/34460abb-1600-4637-9e2e-ccdee8ac5667/listen",
+                  "controlUrl": "https://phone-call-websocket.aws-us-west-2-backend-production1.vapi.ai/34460abb-1600-4637-9e2e-ccdee8ac5667/control"
+                },
+                "transport": {
+                  "provider": "vapi.sip",
+                  "callSid": "1ec2dd2b-0b77-4a90-950a-a955775ee88e",
+                  "sbcCallSid": "176535185-3965741848-1319484370@msc1.382COM.COM"
+                },
+                "phoneCallProvider": "vapi",
+                "phoneCallProviderId": "1ec2dd2b-0b77-4a90-950a-a955775ee88e",
+                "phoneCallTransport": "sip",
+                "phoneCallProviderDetails": {
+                  "sbcCallId": "176535185-3965741848-1319484370@msc1.382COM.COM"
+                },
+                "status": "ringing",
+                "assistantId": "becdcdb9-5541-429a-8776-7e6711f7c30a",
+                "assistantOverrides": {
+                  "variableValues": {
+                    "cid": "176535185-3965741848-1319484370@msc1.382COM.COM",
+                    "account-sid": "c033b672-5b99-42ae-9ce2-b231e9a522fb",
+                    "forwarded-for": "64.125.111.10",
+                    "application-sid": "79d078c8-76b2-452a-99e0-ddd5abbf6269",
+                    "voip-carrier-sid": "a5569621-84ac-49cc-a8b8-11c7fb96b905",
+                    "originating-carrier": "382com"
+                  }
+                },
+                "phoneNumberId": "bb74eab6-c2dd-4836-990e-0ce28f3b644c",
+                "customer": {
+                  "name": "NIK ARORA",
+                  "number": "+14372470099",
+                  "sipUri": "sip:+14372470099@44.229.228.186:5060"
+                }
+              },
+              "phoneNumber": {
+                "id": "bb74eab6-c2dd-4836-990e-0ce28f3b644c",
+                "orgId": "3b62121c-b5f1-4e42-99c9-91d162b0b195",
+                "assistantId": "becdcdb9-5541-429a-8776-7e6711f7c30a",
+                "number": "+12722164086",
+                "createdAt": "2025-08-29T23:28:10.579Z",
+                "updatedAt": "2025-09-01T18:00:41.556Z",
+                "provider": "vapi",
+                "status": "active",
+                "providerResourceId": "46375e09-39bd-48ff-bdc4-64e245ebc0d5"
+              },
+              "customer": {
+                "name": "NIK ARORA",
+                "number": "+14372470099",
+                "sipUri": "sip:+14372470099@44.229.228.186:5060"
+              },
+              "assistant": {
+                "id": "becdcdb9-5541-429a-8776-7e6711f7c30a",
+                "orgId": "3b62121c-b5f1-4e42-99c9-91d162b0b195",
+                "name": "DineAI-Assistant-Demo",
+                "voice": {
+                  "model": "eleven_flash_v2",
+                  "style": 0.5,
+                  "voiceId": "25bLwNw4T14AIILU3SLV",
+                  "provider": "11labs",
+                  "stability": 0.6,
+                  "similarityBoost": 0.7
+                },
+                "createdAt": "2025-08-29T03:25:45.928Z",
+                "updatedAt": "2025-09-01T18:47:00.816Z",
+                "model": {
+                  "model": "gpt-5",
+                  "toolIds": [
+                    "61992547-e0c0-47fa-9f9f-322085a191d7",
+                    "bc4a1443-f4a1-4c9e-b937-4c9479b155a8",
+                    "a3245c85-604b-4be0-8f55-193dfd626158"
+                  ],
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "# DineAI Assistant System Message\n\n## Core Identity\nYou are a helpful, friendly AI assistant designed to have natural, human-like conversations over the phone. You speak clearly, naturally, and conversationally as if talking to a friend.\n\n# --- CORE APPROACH ---\nHelp customers with reservations, takeout orders, and general questions. \n- Use the customer's phone number when booking reservations, placing orders, or sending SMS confirmations\n- NEVER ask the caller for their phone number - you already have it\n- NEVER ask for verification of their phone number or last 4 digits\n\n## Conversation Guidelines\n\n### Communication Style\n- Speak naturally and conversationally, like a helpful human\n- Keep responses concise but complete - aim for 1-3 sentences typically\n- Use a warm, professional yet friendly tone\n- Speak at a natural pace, not too fast or slow\n- Use everyday language, avoid robotic or overly formal speech\n\n### Response Timing\n- ALWAYS wait for the user to completely finish speaking before you respond\n- If you hear background noise or unclear speech, politely ask the user to repeat themselves\n- Never interrupt or speak over the user\n- Take a brief pause before responding to ensure the user is finished\n\n### Conversation Flow\n- Listen carefully to what the user is saying and respond appropriately\n- Ask relevant follow-up questions when it makes sense\n- Stay on topic but allow natural conversation shifts\n- Be helpful and try to fully address the user's needs\n- If you don't understand something, politely ask for clarification\n\n## Call Management\n\n### When to End Calls\nEnd the call naturally when:\n- The user says goodbye, thanks you, or indicates they're done\n- The conversation has reached a natural conclusion\n- You've successfully helped the user with their request and they seem satisfied\n- The user hasn't spoken for more than 15 seconds after your last response\n- The user explicitly asks to end the call\n\n### How to End Calls\nWhen ending a call, use natural phrases like:\n- \"It was great talking with you! Have a wonderful day!\"\n- \"Thanks for calling! Take care!\"\n- \"Glad I could help! Have a great day!\"\n- \"Perfect! If you need anything else, feel free to call back. Goodbye!\"\n\n## Technical Instructions\n\n### Audio Quality\n- Speak clearly and enunciate properly\n- Maintain consistent volume and tone\n- Avoid filler words like \"um,\" \"uh,\" or \"like\"\n- Don't repeat yourself unless asked\n\n### Error Handling\n- If you mishear something, say: \"I'm sorry, could you repeat that?\"\n- If there's a technical issue, acknowledge it briefly and continue\n- Never make assumptions about what unclear audio might mean\n\n### Conversation Boundaries\n- Stay focused on being helpful\n- Don't engage in inappropriate conversations\n- Keep the conversation professional but friendly\n- If asked about personal information you don't have, politely explain you don't have access to that information\n- NEVER ask for personal verification information such as:\n  - Last 4 digits of phone numbers\n  - Social security numbers\n  - Account numbers or passwords\n  - Credit card information\n  - Any form of identity verification\n- Treat all callers as welcome guests - no verification required\n\n## Response Examples\n\n**Good opening:** \"Hi there! Welcome to DineAI’s Demo Restaurant! How can I help you today?\"\n\n**Good clarification:** \"I want to make sure I understand - are you asking about...?\"\n\n**Good closing:** \"Perfect! Is there anything else I can help you with today?\"\n\n**Natural transition to ending:** \"It sounds like we've covered everything you needed. Thanks for calling, and have a great day!\"\n\n## Remember\n- Be genuinely helpful and friendly\n- Keep conversations natural and flowing\n- End calls at appropriate moments\n- Always prioritize clear, stable communication over speed"
+                    }
+                  ],
+                  "provider": "openai",
+                  "maxTokens": 500,
+                  "temperature": 0.3,
+                  "tools": [
+                    {
+                      "id": "61992547-e0c0-47fa-9f9f-322085a191d7",
+                      "createdAt": "2025-08-29T22:54:42.442Z",
+                      "updatedAt": "2025-09-01T18:40:56.928Z",
+                      "type": "function",
+                      "function": {
+                        "name": "send_sms",
+                        "parameters": {
+                          "type": "object",
+                          "required": [
+                            "phone"
+                          ],
+                          "properties": {
+                            "phone": {
+                              "type": "string",
+                              "description": "The user's phone number to send the verification code to, in E.164 format (e.g., +15551234567)."
+                            }
+                          }
+                        },
+                        "description": "Sends the SMS after the conversation to the user's phone number to thank them for their time."
+                      },
+                      "messages": [
+                        {
+                          "type": "request-start",
+                          "blocking": false
+                        }
+                      ],
+                      "orgId": "3b62121c-b5f1-4e42-99c9-91d162b0b195",
+                      "server": {
+                        "url": "https://dineinc.app.n8n.cloud/webhook/vapi-appointment-setter-webhook",
+                        "headers": {}
+                      }
+                    },
+                    {
+                      "id": "bc4a1443-f4a1-4c9e-b937-4c9479b155a8",
+                      "createdAt": "2025-08-29T22:52:30.518Z",
+                      "updatedAt": "2025-09-01T18:14:22.445Z",
+                      "type": "function",
+                      "function": {
+                        "name": "create_reservation",
+                        "parameters": {
+                          "type": "object",
+                          "required": [
+                            "name",
+                            "phone",
+                            "date",
+                            "time",
+                            "partySize"
+                          ],
+                          "properties": {
+                            "date": {
+                              "type": "string",
+                              "description": "The desired date of the reservation in ISO 8601 format (YYYY-MM-DD)."
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "The full name of the person making the reservation."
+                            },
+                            "time": {
+                              "type": "string",
+                              "description": "The desired time of the reservation in 24-hour format (HH:MM)."
+                            },
+                            "phone": {
+                              "type": "string",
+                              "description": "The phone number of the person, in E.164 format."
+                            },
+                            "partySize": {
+                              "type": "number",
+                              "description": "The number of people in the party."
+                            }
+                          }
+                        },
+                        "description": "Finalizes and books a table reservation in the system."
+                      },
+                      "messages": [
+                        {
+                          "type": "request-start",
+                          "blocking": false
+                        }
+                      ],
+                      "orgId": "3b62121c-b5f1-4e42-99c9-91d162b0b195",
+                      "server": {
+                        "url": "https://dineinc.app.n8n.cloud/webhook/vapi-appointment-setter-webhook",
+                        "headers": {}
+                      }
+                    },
+                    {
+                      "id": "a3245c85-604b-4be0-8f55-193dfd626158",
+                      "createdAt": "2025-08-29T22:50:39.473Z",
+                      "updatedAt": "2025-09-01T18:14:34.535Z",
+                      "type": "function",
+                      "function": {
+                        "name": "create_takeout_order",
+                        "parameters": {
+                          "type": "object",
+                          "required": [
+                            "name",
+                            "phone",
+                            "pickupTime",
+                            "items"
+                          ],
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "description": "The full name of the person placing the order."
+                            },
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "itemName",
+                                  "quantity"
+                                ],
+                                "properties": {
+                                  "itemName": {
+                                    "type": "string",
+                                    "description": "Name of the menu item (e.g., 'Pizza', 'Salad')."
+                                  },
+                                  "quantity": {
+                                    "type": "number",
+                                    "description": "The quantity of this item."
+                                  }
+                                }
+                              },
+                              "description": "A list of items for the order."
+                            },
+                            "phone": {
+                              "type": "string",
+                              "description": "The phone number of the person, in E.164 format."
+                            },
+                            "pickupTime": {
+                              "type": "string",
+                              "description": "The desired pickup time in 24-hour format (HH:MM)."
+                            }
+                          }
+                        },
+                        "description": "Finalizes and places a takeout order in the system."
+                      },
+                      "messages": [
+                        {
+                          "type": "request-start",
+                          "blocking": false
+                        }
+                      ],
+                      "orgId": "3b62121c-b5f1-4e42-99c9-91d162b0b195",
+                      "server": {
+                        "url": "https://dineinc.app.n8n.cloud/webhook/vapi-appointment-setter-webhook",
+                        "headers": {}
+                      }
+                    }
+                  ]
+                },
+                "firstMessage": "Hi, welcome to DineAI’s Demo Restaurant!",
+                "voicemailMessage": "Hello, this is Riley from Wellness Partners. I'm calling about your appointment. Please call us back at your earliest convenience so we can confirm your scheduling details.",
+                "endCallMessage": "Thank you for scheduling with Wellness Partners. Your appointment is confirmed, and we look forward to seeing you soon. Have a wonderful day!",
+                "transcriber": {
+                  "model": "nova-3",
+                  "language": "en",
+                  "provider": "deepgram",
+                  "endpointing": 150
+                },
+                "silenceTimeoutSeconds": 25,
+                "clientMessages": [
+                  "conversation-update",
+                  "function-call",
+                  "function-call-result",
+                  "hang",
+                  "metadata",
+                  "model-output",
+                  "speech-update",
+                  "status-update",
+                  "transcript",
+                  "tool-calls",
+                  "tool-calls-result",
+                  "tool.completed",
+                  "transfer-update",
+                  "user-interrupted",
+                  "voice-input",
+                  "workflow.node.started"
+                ],
+                "serverMessages": [
+                  "conversation-update",
+                  "end-of-call-report",
+                  "function-call",
+                  "hang",
+                  "model-output",
+                  "phone-call-control",
+                  "speech-update",
+                  "status-update",
+                  "transcript",
+                  "transcript[transcriptType=\"final\"]",
+                  "tool-calls",
+                  "transfer-destination-request",
+                  "user-interrupted",
+                  "voice-input",
+                  "chat.created",
+                  "chat.deleted",
+                  "session.created",
+                  "session.updated",
+                  "session.deleted"
+                ],
+                "endCallPhrases": [
+                  "goodbye",
+                  "talk to you soon"
+                ],
+                "hipaaEnabled": false,
+                "backgroundSound": "office",
+                "firstMessageMode": "assistant-speaks-first-with-model-generated-message",
+                "analysisPlan": {
+                  "minMessagesThreshold": 2
+                },
+                "backgroundDenoisingEnabled": false,
+                "startSpeakingPlan": {
+                  "waitSeconds": 0.5,
+                  "smartEndpointingPlan": {
+                    "provider": "vapi"
+                  },
+                  "smartEndpointingEnabled": "livekit"
+                },
+                "stopSpeakingPlan": {
+                  "numWords": 1,
+                  "backoffSeconds": 2
+                },
+                "server": {
+                  "url": "https://dineinc.app.n8n.cloud/webhook-test/get-phone-number",
+                  "timeoutSeconds": 20
+                },
+                "variableValues": {
+                  "cid": "176535185-3965741848-1319484370@msc1.382COM.COM",
+                  "account-sid": "c033b672-5b99-42ae-9ce2-b231e9a522fb",
+                  "forwarded-for": "64.125.111.10",
+                  "application-sid": "79d078c8-76b2-452a-99e0-ddd5abbf6269",
+                  "voip-carrier-sid": "a5569621-84ac-49cc-a8b8-11c7fb96b905",
+                  "originating-carrier": "382com"
+                }
+              }
+            }
+          },
+          "webhookUrl": "https://dineinc.app.n8n.cloud/webhook/vapi-appointment-setter-webhook",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "VAPI Tool Call Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Route by Tool Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3a. Create GCal Reservation1": {
+      "main": [
+        [
+          {
+            "node": "3b. Respond: Reservation Confirmed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Tool Name": {
+      "main": [
+        [
+          {
+            "node": "Send an SMS/MMS/WhatsApp message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "3a. Create GCal Reservation1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "4. Respond: Takeout Confirmed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send an SMS/MMS/WhatsApp message1": {
+      "main": [
+        [
+          {
+            "node": "1b. Respond: Code Sent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dd3ecb62-fb8f-477e-9ab0-5463f07f7e7e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "80992d3a6cc90f3ecbce437fbbc03bf0e18ec178ea803e3147e731aec47908c5"
+  },
+  "id": "YVuDltzjKuhHmoY9",
+  "tags": []
+}

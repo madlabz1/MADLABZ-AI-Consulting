@@ -1,0 +1,990 @@
+{
+  "name": "Workflow-2-Customer-Support-RAG",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1936,
+        16
+      ],
+      "id": "7ee9519e-5feb-435d-bd47-2d01197c8698",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YfjR7Rjur9H91m9I",
+          "name": "Gmail Pogan Cristian"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4844a4aa-f084-4259-97b0-f376d159e5cb",
+              "name": "emailBody",
+              "value": "={{ $('Gmail Trigger').item.json.textAsHtml }}",
+              "type": "string"
+            },
+            {
+              "id": "4e061b85-ad6e-4d5a-92a7-691ddfd5836d",
+              "name": "threadID",
+              "value": "={{ $('Gmail Trigger').item.json.threadId }}",
+              "type": "string"
+            },
+            {
+              "id": "014b6cfc-7200-4eb6-b2c6-fe58daa0d68b",
+              "name": "subject",
+              "value": "={{ $('Gmail Trigger').item.json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "3e5dd0ac-8d3d-4620-b2fb-69d637b946dc",
+              "name": "sender",
+              "value": "={{ $('Gmail Trigger').item.json.from.value[0].address }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1520,
+        16
+      ],
+      "id": "6d7e1d9f-8da3-4bb8-a19b-ac20cacd82dd",
+      "name": "Set Content"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Prompt:\nAnalyze the content of the following email and determine whether it is related to customer support. If the email pertains to any of the following topics, mark customerSupport as true; otherwise, mark it as false.\n\nCustomer Support Topics Include:\n\nQuestions about order status, tracking, or changes\nIssues with damaged or defective products\nRefund or return requests\nSubscription cancellations or adjustments\nTechnical issues with products, website, or app Payment or billing inquiries\nRequests for speaking with a support representative\n\nOutput:\nProvide the result in JSON format with a field named \"customerSupport\" set to true or false.|",
+              "role": "system"
+            },
+            {
+              "content": "=Here is the incoming email: {{ $json.emailBody }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1312,
+        16
+      ],
+      "id": "e4781d1f-690c-4d67-a0a3-e390d5beaf08",
+      "name": "Customer support eval",
+      "credentials": {
+        "openAiApi": {
+          "id": "6fTqnYhqXkusPyeI",
+          "name": "OpenAi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.content.customerSupport }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "4657ed4d-7832-45e2-ae0b-b3dd4d7fc27f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Customer Support"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "38610d93-cf83-4ce1-814e-0fef2bc0a69f",
+                    "leftValue": "={{ $json.message.content.customerSupport }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "false",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Not Customer Support"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -976,
+        16
+      ],
+      "id": "c32ea58f-d6c5-48a9-9e16-408911c579ac",
+      "name": "Customer Support?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ebe7aef3-026d-4c22-ac5b-0b348246e965",
+              "name": "Unipile_DSN",
+              "value": "api21.unipile.com:15128",
+              "type": "string"
+            },
+            {
+              "id": "f82c182b-e63d-4969-ab6a-a63f2002d0f7",
+              "name": "Unipile_Account_ID",
+              "value": "eJ4h6YZkQCWRMjqiDgsmMw",
+              "type": "string"
+            },
+            {
+              "id": "36445f5c-cd68-494e-82d1-830fe16f0a24",
+              "name": "Unipile_API_Key",
+              "value": "B4m7kPOJ.sWru6Ci1Nt4AaqZs88/V3nNGyoSf8a3UJiDd7cT7uSk=",
+              "type": "string"
+            },
+            {
+              "id": "7e6d2040-6c50-41a6-a04e-ed8c1ebab678",
+              "name": "WhatsApp_Chat_ID",
+              "value": "bYefUS8qWZiKUcaw8sq_dw",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1680,
+        16
+      ],
+      "id": "4c5bd393-5579-4f8c-8d9c-4fa46968f144",
+      "name": "WhatsApp-Config"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://{{ $('WhatsApp-Config').item.json.Unipile_DSN }}/api/v1/chats/{{ $('WhatsApp-Config').item.json.WhatsApp_Chat_ID }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "={{ $('WhatsApp-Config').item.json.Unipile_API_Key}}"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "content-type",
+              "value": "multipart/form-data"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        192,
+        576
+      ],
+      "id": "fc3a5c29-317a-4ec8-8011-1df6c40576a9",
+      "name": "Send message on WhatsApp"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Set Content').item.json.emailBody }}",
+        "options": {
+          "systemMessage": "=• Systen Role\nYou are a highly skilled and empathetic customer support agent specializing In drafting professional and helpful responses to incoming customer enails.\n& Task Specification\n1. Take an incoming custoner support chall.\n2. Use the ***customerSupportDocs*** tool to look up relevant policies or FAQs to ensure accurate and policy-compliant responses.\n3. Create a draft response using the **\"createDraft\"** tool.\n4. After drafting the enail, provide a concise summary of the email content.\nEnsure the response:\n- Directly addresses the customer's query.\n- Maintains a polite and professional tone,\nEnds with the sign-off:\n***Kelly, Customer Support ABC Corp.***\n• Specifics and Context\n- You must use the **\"custonerSupportDocs*** tool before drafting to ensure he response aligns with company policies and FAQs.\nThe **\"createDraft\"** tool must be used to finalize and prepare the draft for sending.\n- The summary should briefly explain the issue addressed and the key points or resolution provided in the response.\n\n• Examples a Example 1\n**Inconing Email:\"*\n*I ordered a product a week ago, but it still hasn't shipped. when will it arrive?\"\n**customerSupportDocs Search Query:**\n\"shipping timelines\"\n**Relevant Info Found:**\nStandard shipping takes 7-10 business days. Delays way occur during high-demand periods.\n**Draft Response (via createDraft):**\nDear (Customer's Nane),\nThank you for reaching out regarding your order. Standard shipping typically takes 7-10 business days. However, during high-demand periods, there may be slight delays.\nI've checked your order, and it's currently being prepared shipment. You\nshould receive a tracking number shortly. If you have any further questions, feel free to let me know."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -352,
+        -96
+      ],
+      "id": "ea0340a6-43e0-4850-a922-7db17d3647cf",
+      "name": "Customer Support Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -496,
+        160
+      ],
+      "id": "4fd342fd-4273-4845-ae85-27f2d68b0fb5",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "6fTqnYhqXkusPyeI",
+          "name": "OpenAi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "aa",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "customer-support-vectorstore",
+          "mode": "list",
+          "cachedResultName": "customer-support-vectorstore"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -320,
+        160
+      ],
+      "id": "ef5b357f-139c-4a17-bad9-ae0a7353959b",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "fGNUd5ZewSip7nsv",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $('Set Content').item.json.subject }}",
+        "message": "={{ $fromAI(\"output\")}}",
+        "options": {
+          "threadId": "={{ $('Set Content').item.json.threadID }}",
+          "sendTo": "={{ $('Set Content').item.json.sender }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -32,
+        160
+      ],
+      "id": "4888d67e-27dc-4555-a44c-e1b49b87dc66",
+      "name": "createDraft",
+      "webhookId": "966272ae-b9af-45cd-a10f-85f6229ef5a8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YfjR7Rjur9H91m9I",
+          "name": "Gmail Pogan Cristian"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -368,
+        336
+      ],
+      "id": "c5288ddb-4310-41c2-a52c-45e2424217d9",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "6fTqnYhqXkusPyeI",
+          "name": "OpenAi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c4bf5430-aa06-4129-9c1a-882891795fe7",
+              "name": "message",
+              "value": "Not customer support",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -144,
+        576
+      ],
+      "id": "a67b3d5e-5c68-47d8-858a-cc5bcdc7cb19",
+      "name": "Set-Message"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "300a9811-7a89-49bb-ba61-35d95f46ec2e",
+              "name": "message",
+              "value": "=Automatically created Customer Support Draft:  {{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        -96
+      ],
+      "id": "6c234d76-6109-49ef-ad16-19801c37adb7",
+      "name": "Set-Customer-Suport-Reply"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1936,
+        368
+      ],
+      "id": "7775c111-33de-46ee-a819-6a42f68d654c",
+      "name": "When clicking ‘Execute workflow’",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1rm1CFIwTFJchA2UOlQ9cH_B7utWQ5q8t",
+          "mode": "list",
+          "cachedResultName": "Customer-Support-Policies.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1rm1CFIwTFJchA2UOlQ9cH_B7utWQ5q8t/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1728,
+        368
+      ],
+      "id": "2ec8a969-3c64-406b-94d2-c09f484d19fd",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "lIdwwwxowfDwYFOH",
+          "name": "Google Drive - Pogan Cristian"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1056,
+        560
+      ],
+      "id": "ef104465-a13e-4d30-a39e-677b2f2d4680",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "6fTqnYhqXkusPyeI",
+          "name": "OpenAi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -896,
+        560
+      ],
+      "id": "24fa8ca9-370d-4d86-b641-4c6371af362a",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        768
+      ],
+      "id": "becc650b-c9ba-440f-862a-b3b70eb42dd8",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "customer-support-vectorstore",
+          "mode": "list",
+          "cachedResultName": "customer-support-vectorstore"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -960,
+        368
+      ],
+      "id": "4bbc7c2f-b96f-49d7-92f2-17a9b751d674",
+      "name": "Pinecone Vector Store2",
+      "credentials": {
+        "pineconeApi": {
+          "id": "fGNUd5ZewSip7nsv",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -1488,
+        368
+      ],
+      "id": "13b9b5c7-8687-45d1-b799-fc6a2ab06c93",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This code takes the text extracted from a PDF and structures it into a clean JSON object.\n// It identifies numbered sections and the FAQ section to create a more usable format.\n\nconst items = $('Extract from File').all();\nconst structuredItems = [];\n\nfor (const item of items) {\n  // Get the raw text from the input item\n  const rawText = item.json.text;\n  if (!rawText) {\n    continue;\n  }\n\n  const structuredData = {};\n\n  // --- 1. Separate the main content from the FAQs ---\n  // We split the document at the FAQ title to handle them differently.\n  const faqSplit = rawText.split('\\nFrequently Asked Questions (FAQs)\\n');\n  const mainContent = faqSplit[0];\n  const faqContent = faqSplit.length > 1 ? faqSplit[1] : '';\n\n  // --- 2. Process the main, numbered sections ---\n  // This regex splits the text right before a new section starts (e.g., before \"\\n2. Hours of Operation\")\n  const sections = mainContent.split(/(?=\\n\\d+\\.\\s)/).map(s => s.trim());\n\n  // Handle the document title and header separately\n  const headerBlock = sections.shift() || '';\n  const headerLines = headerBlock.split('\\n');\n  structuredData.documentTitle = headerLines.shift(); // E.g., \"Customer Support Charter & Policies\"\n  structuredData.documentInfo = headerLines.map(line => line.trim()); // E.g., Version, Last Updated\n\n  // Loop through the numbered sections and create key-value pairs\n  for (const section of sections) {\n    const lines = section.split('\\n');\n    // The first line is the title, like \"2. Hours of Operation\"\n    const title = lines.shift().replace(/^\\d+\\.\\s*/, '').trim();\n    // The rest is the content\n    const content = lines.join('\\n').trim();\n    \n    // Use a cleaned-up title as the key in our new JSON object\n    if (title) {\n      structuredData[title] = content;\n    }\n  }\n\n  // --- 3. Process the FAQ section ---\n  if (faqContent) {\n    structuredData.FAQs = [];\n    // Split each question block, which starts with \"Q:\"\n    const questionBlocks = faqContent.split(/(?=Q:)/).filter(q => q.trim());\n    \n    for (const block of questionBlocks) {\n      // Separate the question from the answer\n      const qaParts = block.split('A:');\n      if (qaParts.length === 2) {\n        const question = qaParts[0].replace('Q:', '').trim();\n        const answer = qaParts[1].trim();\n        structuredData.FAQs.push({ question, answer });\n      }\n    }\n  }\n\n  // Add the newly structured JSON to the output\n  structuredItems.push({\n    json: structuredData,\n    pairedItem: item.pairedItem,\n  });\n}\n\n// Return the final array of structured items\nreturn structuredItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1232,
+        368
+      ],
+      "id": "1a94eb68-4242-4d41-b00b-9ee291910eab",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "content": "## Insert Customer Support policy document to Pinecone Vector store - which is a different type of memory for dynamic and fast retrieval of information",
+        "height": 656,
+        "width": 1392,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2000,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "11143db6-006a-4a8c-a4ec-f72c280c00e4",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Set the credentials and important data",
+        "height": 320,
+        "width": 384
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1744,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "8c00ad65-2afd-451f-87c9-bd85e9a09e51",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Identify if email needs customer support processing",
+        "height": 320,
+        "width": 592,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1360,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "e6a64748-df40-4548-962b-bd92e582adcb",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Process and draft customer support message",
+        "height": 656,
+        "width": 624,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "bf197087-d9f9-4e82-9423-1943e093aa0a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Send notification to WhatsApp",
+        "height": 320,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "fc7ee7d0-9dd8-4877-a1a7-d36234b6aa36",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Set WhatsApp message",
+        "height": 320,
+        "width": 336,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "eb2a77ae-9a21-4348-89a0-c6d13816568c",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Set WhatsApp message",
+        "height": 320,
+        "width": 336,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "86250017-9df9-42cf-b906-547a42a949eb",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "19924ea169e07c00",
+          "threadId": "19924ea169e07c00",
+          "labelIds": [
+            "UNREAD",
+            "IMPORTANT",
+            "CATEGORY_PERSONAL",
+            "INBOX"
+          ],
+          "sizeEstimate": 13001,
+          "headers": {
+            "delivered-to": "Delivered-To: pogancristian@gmail.com",
+            "received": "Received: from VE1P192MB0623.EURP192.PROD.OUTLOOK.COM\r\n ([fe80::fb82:b804:962f:4b7a]) by VE1P192MB0623.EURP192.PROD.OUTLOOK.COM\r\n ([fe80::fb82:b804:962f:4b7a%4]) with mapi id 15.20.9094.018; Sun, 7 Sep 2025\r\n 16:02:20 +0000",
+            "x-google-smtp-source": "X-Google-Smtp-Source: AGHT+IFX9Im9MvE21C7k1ks2aVts89DZwH9YLgL3WulShGwe4+hthnQ/qyn3Z0TDQfrHpr/P7GPh",
+            "x-received": "X-Received: by 2002:a17:90b:2883:b0:32b:97ff:c944 with SMTP id 98e67ed59e1d1-32d43f93d9bmr6564195a91.28.1757260945513;\r\n        Sun, 07 Sep 2025 09:02:25 -0700 (PDT)",
+            "arc-seal": "ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;\r\n b=Qrc+Yb4YtX3Ibbmdg24uA5Q4abwkitZhlL/Y2z088LV4FmwpN/8VJpPNkWFvglue3rTnpAGtP6BanSGyoXB5pQjtjjGMCkzb6j8UO20teAyyDT7LI5pdXog6vH+hPfLYKkH5rHfel3JMoJDnuUWIh0W2gUTmJm1t+6Rp6aGI/0VN6INYdfyXC1yM9PGTRDtC5h187VElnmX0uXvcttlmsGB0IW9oDbJyt1kXaO3tWlHvwcABwh/yKZaG5ZQBcIODpTYfcNmGLPVcmZy6Q2n2UTpzZS3Z4erOm55HjKR5zVzc8kAHueEqMPH8N17TlfQdeiDeVDNl58Rp61Zp8qCPfQ==",
+            "arc-message-signature": "ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;\r\n s=arcselector10001;\r\n h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;\r\n bh=UJfg8QwNeNuHf4PvDoUT4VTBzyBOApRR/lqe3NI7X+E=;\r\n b=tUDFKdUZSQ+4sGe5b3U+bWTmW8HBl2JQ+Vl92Brj2DE94Eesv4+CJ0EkiRFMDageKMFTWWiXgCXWpihpM7EU8NJnaqf44a/8nC7LhqEGl1DO/azyA7wGjhW576LeH0MDiR02yYhNEHzga2eDKav+MvUtW9l8ZzSRKcKutWdT+qRtfLVKrBFHnlCaeIBemeOZrcqcTKnfHxIBClp69TZOVSo68aOMDRFQbix6/WPG2DAe9ys57KmyjLCU5sXh+ZhySUhSVhYiTND628yOJ0RsPXUHXY3dXC1bSBU2dohFgz+27NL2GQnICZ1E6lIMUBG9H0abePC9DPSmh0Gi1ZdPRQ==",
+            "arc-authentication-results": "ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass\r\n smtp.mailfrom=pogan-cristian.com; dmarc=pass action=none\r\n header.from=pogan-cristian.com; dkim=pass header.d=pogan-cristian.com;\r\n arc=none",
+            "return-path": "Return-Path: <contact@pogan-cristian.com>",
+            "received-spf": "Received-SPF: pass (google.com: domain of contact@pogan-cristian.com designates 2a01:111:f403:260d::70f as permitted sender) client-ip=2a01:111:f403:260d::70f;",
+            "authentication-results": "authentication-results: dkim=none (message not signed)\r\n header.d=none;dmarc=none action=none header.from=pogan-cristian.com;",
+            "from": "From: Cristian Pogan <contact@pogan-cristian.com>",
+            "to": "To: Pogan Cristian <pogancristian@gmail.com>",
+            "subject": "Subject: Customer Support query",
+            "thread-topic": "Thread-Topic: Customer Support query",
+            "thread-index": "Thread-Index: AQHcIBDKlVAMakfuRU6ENrL77dkyzA==",
+            "date": "Date: Sun, 7 Sep 2025 16:02:20 +0000",
+            "message-id": "Message-ID:\r\n <VE1P192MB062332760FEBA882AF648AB5960DA@VE1P192MB0623.EURP192.PROD.OUTLOOK.COM>",
+            "accept-language": "Accept-Language: en-GB, en-US",
+            "content-language": "Content-Language: en-GB",
+            "x-ms-has-attach": "X-MS-Has-Attach:",
+            "x-ms-tnef-correlator": "X-MS-TNEF-Correlator:",
+            "msip_labels": "msip_labels:",
+            "x-ms-publictraffictype": "x-ms-publictraffictype: Email",
+            "x-ms-traffictypediagnostic": "x-ms-traffictypediagnostic: VE1P192MB0623:EE_|VI0P192MB2316:EE_",
+            "x-ms-office365-filtering-correlation-id": "x-ms-office365-filtering-correlation-id: 5a8682ea-a5ae-4f3b-2891-08ddee27ed1c",
+            "x-ms-exchange-senderadcheck": "x-ms-exchange-senderadcheck: 1",
+            "x-ms-exchange-antispam-relay": "x-ms-exchange-antispam-relay: 0",
+            "x-microsoft-antispam": "x-microsoft-antispam:\r\n BCL:0;ARA:13230040|366016|1800799024|376014|8096899003|38070700018;",
+            "x-microsoft-antispam-message-info": "x-microsoft-antispam-message-info:\r\n =?iso-8859-1?Q?ay28KCRFEX2duWYmZg7mEcEVZSv18x29kUp4lbMbApPWG13c5sRQ8nDeHE?=\r\n =?iso-8859-1?Q?M7GsPQgb7P+XfMyw6BR3J/j97CZ8C2wnJviHcY4hnPFk5rMy+YZ/f3oO9k?=\r\n =?iso-8859-1?Q?AJO4PUnW9XgzhBDRO1Lk1XMrytC+o/bJo/rlH6efD7R3fSpG/4wakkPCFj?=\r\n =?iso-8859-1?Q?cxrrD8T5mD5OrsKR9I3oyWNtr4tSw4JGGRt0/BIupKxHfK4Ng3ZzgGBiKk?=\r\n =?iso-8859-1?Q?/FVf+FT2AJpowGQGjchwTCV5jgWGNrSLFJzbfCwLcTsPi4QxyGgZBfUGvS?=\r\n =?iso-8859-1?Q?8IaoydcasqcP9WSjVlvO/97iOggjh+01GwEDncFFaSJJRc2adq51FO53EF?=\r\n =?iso-8859-1?Q?7ZpYeL3xsxtcP+2iu0Qd+7qIBwZdakTEsp8YgDoyz8UTawOo/hwM0xdnPN?=\r\n =?iso-8859-1?Q?ROZTox4sQiOsqPMuLAi47ZdKniCPIdLeqKBuzywjV5OXePTtgRKaTLHlTO?=\r\n =?iso-8859-1?Q?SMEcCOLn4WuqUwdCGGKixtwl1HPsBnbMEbF2oyWWJQ7OlMKEHGFlZbmQCb?=\r\n =?iso-8859-1?Q?OodFgvlwT8/y8H2X+qi17JOdVdGFxoKnXKaIbxyTuZLt/ev5+/PNU7pXr/?=\r\n =?iso-8859-1?Q?artqRQe5S0teY9tzDGai9K3vk94lU/8z8RHnv4u7m2/Ndy6kS/eJ510zUo?=\r\n =?iso-8859-1?Q?uZvJ/gthN1BZqJkJVUFkKwhv4NrJWrUPY5tTMD/yBuPeMSX7ntgvwymYDv?=\r\n =?iso-8859-1?Q?QEtNl4KpTyMbyNCAPBOjV0nc3XJm6q5ovBNL3t35YMV+XJUWH8MqXo8Bv8?=\r\n =?iso-8859-1?Q?lwEXNP6rHQeKSLMDg6FpnaBtUULh9IItIgGZY71xGRghfYJ8JM3qMxDKCH?=\r\n =?iso-8859-1?Q?0kUFz/LbZfMuVSwzOEYw6tvHX1ENTcDJtHQjoOo3IziFNH7adPO7KYt/oR?=\r\n =?iso-8859-1?Q?w3MGbIFdlPhU++gRLp6/R0rM3LFFnhhgTS/NwQrZ1Wf57/vqTfkvtPf4Ln?=\r\n =?iso-8859-1?Q?9hEV324mToPuV+gDk+cw5CsQJ++zskMDeKiu0QS68mTT3vA7zDZnFI6SOD?=\r\n =?iso-8859-1?Q?/UGMo4QdAVYlg0iORj9/E1jTHWen45Eh2VadakYRZqmLuH20mKfMnUsk8N?=\r\n =?iso-8859-1?Q?z/w/bWGiTJ2+rclbiVXEMgxonk3lYlEqV038hlGOWAGDIYGyat801yavy0?=\r\n =?iso-8859-1?Q?yB+z5JW3JJX2SApSQgWcYt5/hooTasL5RmFtufuMN6Ihm1ZRBoS8EiuLsb?=\r\n =?iso-8859-1?Q?oBrfcIwpkMZ8/g1JPk9bPc7gATVM6MEhndHYwEN8OWhifpDJLJitT3g4cF?=\r\n =?iso-8859-1?Q?I1jXSe4VCGjSQW0767w9yySGsOjnnOMd31B8wrbt6ZZ3HxuoO1soUyBXG9?=\r\n =?iso-8859-1?Q?GlN4LEbFFRyQ6tKwTaS5YVgrL7Zvcn53oXh7gyhhftUZuU34F0zLKyA1HS?=\r\n =?iso-8859-1?Q?TqrMWxfQGASN3b53xd0b1qIYwCBvTaKLMu6aViVg6UrbEECZvdWc6JtuEE?=\r\n =?iso-8859-1?Q?14B6wYeKV6453eUzSqIm9GTLPf1GG5hZoPfVMi7Ow8Ggtfq7sxvlgtTIim?=\r\n =?iso-8859-1?Q?BSJX8dT36A+VId6e75u1Jq7HXgBK5lcH/NTw3Et9ccsw=3D=3D?=",
+            "x-forefront-antispam-report": "x-forefront-antispam-report:\r\n CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1P192MB0623.EURP192.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(8096899003)(38070700018);DIR:OUT;SFP:1102;",
+            "x-ms-exchange-antispam-messagedata-chunkcount": "x-ms-exchange-antispam-messagedata-chunkcount: 1",
+            "x-ms-exchange-antispam-messagedata-0": "x-ms-exchange-antispam-messagedata-0:\r\n =?iso-8859-1?Q?LVtfdInDaebTxjMej49/dFJCDQycVaweDPZ6h+YJHwn214mQBJliRZbaZ/?=\r\n =?iso-8859-1?Q?Mc/tiy8kKoCLrUdoaahBexgqd4t0vLj2n5OqNFfzusjznZgtQ6MG+1rqwe?=\r\n =?iso-8859-1?Q?ol/RTLMMEq5hBfRfs9Hi/TrOmFTb3ZDxeiiL5PdbzvOKh3GWeyS5bfABnu?=\r\n =?iso-8859-1?Q?tSDOi5XwS1zbEYWipy9rmKhV8xwc9Bx1n6xROslXZdaToDySPKSsVctTa0?=\r\n =?iso-8859-1?Q?QrV0GjdoKDbIBgf41KcReKksdoeIdnqudbP3tEDRykL1BxXqLV7wXw7XLm?=\r\n =?iso-8859-1?Q?tDRHH2uzFmSYk5gs1FPWHr+/1CZbnt2yTqre5lm4MS717D/M1ZT94tTTjO?=\r\n =?iso-8859-1?Q?39wd0Ct0suxI7hDpum9rgFz8ntGjCtEhzanAMWSz8MSBFVi0p0bnLSLmv8?=\r\n =?iso-8859-1?Q?wZkKo0vFlnpOynKCkxAsa6iRr8KdStlTR1H0AjPItPhRH4JPOGuAKzn6u4?=\r\n =?iso-8859-1?Q?71XyBJePZvr3WMpPjsDPTOgXLZWfprMLycZarLWQ+CQh11YXwuTgHETyzb?=\r\n =?iso-8859-1?Q?e49kxRMRZJNmv+yltgZlmYuoGW7Qfh0njgatr9rCTs9Q9oH1+FM+tAxZIG?=\r\n =?iso-8859-1?Q?FamT6d3KYCgI6tsQ18XzbA6rsunPL2zRedeGyymmrBrT6nccuZyOcC6xkb?=\r\n =?iso-8859-1?Q?DJdqX9Ow8WwVaqq98/xoKMYNtd1c1Rdju9LiXGrVl+qLGQNAhDoF5kAi4J?=\r\n =?iso-8859-1?Q?ZIQsuGIrRsyTtvbgibJ0QBmcUmFiDaUw8M7bgPE4IV4e7Q23Ydr8xkzIMP?=\r\n =?iso-8859-1?Q?jbdmdrRWmqeej+MbBE4pRc9glGUwR4+E4RLEio2QJC3T9yN+Bi93ZASEeE?=\r\n =?iso-8859-1?Q?5kBkfis5sm/aG8Dirv0qL0PLeIyEDGeAT1f0uDSQf6uHu6q8xCmjOdU4IA?=\r\n =?iso-8859-1?Q?GsnfHnoVIH3cmkr0N5LttriNKt/PBHu3aNSmXgwoPDXF9mbuc8JVGwBlcl?=\r\n =?iso-8859-1?Q?8XOWaqYr3+XgX3AFapS4wKdG0sxgPVbQBSG2tltdwHQ543SvVd+GK9wjYP?=\r\n =?iso-8859-1?Q?cL9kZXoXINqgVtbB3ToG2MNwUpIeNKITJad6ousSYFLLxH/CFWhmenEGi/?=\r\n =?iso-8859-1?Q?JK7IXshdlMIXwxeITLLMZEWKk7ZT3PRFEJh4TU+4McWOOODZ7z23b026kY?=\r\n =?iso-8859-1?Q?W04TCAMWPvROqwjKfvh8YG4hGHSlPI6c6uL2eg04oyKDaPn3w6CEeIzHBv?=\r\n =?iso-8859-1?Q?tUrb0WbnZhQsykbhaFXho1emFOHE7j5sls2yHIE1yFts7WhyhwP0SsSDBG?=\r\n =?iso-8859-1?Q?qfU3LMbrDpEaq+kzNrS4AzbgDGf0Gts66vXDHRaQWEV6iN4uWoRN459B96?=\r\n =?iso-8859-1?Q?Kfyb/LDpBZvgvCRyFMN+yfpkcmkRy3Enc0+TxC2EplNuULlcAISTCyUc9b?=\r\n =?iso-8859-1?Q?yNySgfrSlsQ51/RBqOP0MDnlDTq9XKBJs1VGm17g0xnTXknU28N8Pc/fbt?=\r\n =?iso-8859-1?Q?tPzX76TFvihxeFmhT2ro8JNsz5KHE1FEdXKmH/+UJlVVRSFEbq4jGiitDb?=\r\n =?iso-8859-1?Q?vFyGoHOJ4YPBVJn5MQwcbJ+ScHPXwn+pVoKJujY8GoN458T42F0fG0nm2r?=\r\n =?iso-8859-1?Q?rWx3pRqNyBkxMEx83my9EpTkEqLoFkVjK5B6LvfawZhzO2Dh/Q0ryVNSaM?=\r\n =?iso-8859-1?Q?TwkqzaaRrMr8lgt0OvKzawqpJMNt8CLy4g?=",
+            "content-type": "Content-Type: multipart/alternative;\r\n\tboundary=\"_000_VE1P192MB062332760FEBA882AF648AB5960DAVE1P192MB0623EURP_\"",
+            "mime-version": "MIME-Version: 1.0",
+            "x-originatororg": "X-OriginatorOrg: pogan-cristian.com",
+            "x-ms-exchange-crosstenant-authas": "X-MS-Exchange-CrossTenant-AuthAs: Internal",
+            "x-ms-exchange-crosstenant-authsource": "X-MS-Exchange-CrossTenant-AuthSource: VE1P192MB0623.EURP192.PROD.OUTLOOK.COM",
+            "x-ms-exchange-crosstenant-network-message-id": "X-MS-Exchange-CrossTenant-Network-Message-Id: 5a8682ea-a5ae-4f3b-2891-08ddee27ed1c",
+            "x-ms-exchange-crosstenant-originalarrivaltime": "X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2025 16:02:20.5067\r\n (UTC)",
+            "x-ms-exchange-crosstenant-fromentityheader": "X-MS-Exchange-CrossTenant-fromentityheader: Hosted",
+            "x-ms-exchange-crosstenant-id": "X-MS-Exchange-CrossTenant-id: 470851ba-62da-48f2-9469-d2823220fdd1",
+            "x-ms-exchange-crosstenant-mailboxtype": "X-MS-Exchange-CrossTenant-mailboxtype: HOSTED",
+            "x-ms-exchange-crosstenant-userprincipalname": "X-MS-Exchange-CrossTenant-userprincipalname: ZbiVyjWMbQwo6kxP/XPE108sP3hDZwz/lSAe7MnzdtewnfFXJ91XkDSKTRH3q7pkH+SG+17H6XAIua5uEnYVgn4Dt8Wg++I+ZzKu4yuSFBA=",
+            "x-ms-exchange-transport-crosstenantheadersstamped": "X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0P192MB2316"
+          },
+          "html": "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">\n<style type=\"text/css\" style=\"display:none;\"> P {margin-top:0;margin-bottom:0;} </style>\n</head>\n<body dir=\"ltr\">\n<div style=\"line-height: normal; margin: 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\" class=\"elementToProof\">\nHey. I was wondering how I&nbsp;can track my order?</div>\n<div style=\"line-height: normal; margin: 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\" class=\"elementToProof\">\nAlso, what is your refund policy?</div>\n<div style=\"line-height: normal; margin: 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\" class=\"elementToProof\">\nThanks, James</div>\n<div style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\" class=\"elementToProof\">\n<br>\n</div>\n</body>\n</html>\n",
+          "text": "Hey. I was wondering how I can track my order?\nAlso, what is your refund policy?\nThanks, James\n\n",
+          "textAsHtml": "<p>Hey. I was wondering how I can track my order?<br/>Also, what is your refund policy?<br/>Thanks, James</p>",
+          "subject": "Customer Support query",
+          "date": "2025-09-07T16:02:20.000Z",
+          "to": {
+            "value": [
+              {
+                "address": "pogancristian@gmail.com",
+                "name": "Pogan Cristian"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Pogan Cristian</span> &lt;<a href=\"mailto:pogancristian@gmail.com\" class=\"mp_address_email\">pogancristian@gmail.com</a>&gt;</span>",
+            "text": "\"Pogan Cristian\" <pogancristian@gmail.com>"
+          },
+          "from": {
+            "value": [
+              {
+                "address": "contact@pogan-cristian.com",
+                "name": "Cristian Pogan"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Cristian Pogan</span> &lt;<a href=\"mailto:contact@pogan-cristian.com\" class=\"mp_address_email\">contact@pogan-cristian.com</a>&gt;</span>",
+            "text": "\"Cristian Pogan\" <contact@pogan-cristian.com>"
+          },
+          "messageId": "<VE1P192MB062332760FEBA882AF648AB5960DA@VE1P192MB0623.EURP192.PROD.OUTLOOK.COM>"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp-Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Content": {
+      "main": [
+        [
+          {
+            "node": "Customer support eval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer support eval": {
+      "main": [
+        [
+          {
+            "node": "Customer Support?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Support?": {
+      "main": [
+        [
+          {
+            "node": "Customer Support Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set-Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp-Config": {
+      "main": [
+        [
+          {
+            "node": "Set Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Support Agent": {
+      "main": [
+        [
+          {
+            "node": "Set-Customer-Suport-Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Customer Support Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Support Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "createDraft": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Support Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set-Message": {
+      "main": [
+        [
+          {
+            "node": "Send message on WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set-Customer-Suport-Reply": {
+      "main": [
+        [
+          {
+            "node": "Send message on WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store2",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store2",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a2ed3256-4a5f-4a57-840c-d7188b322abc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "80992d3a6cc90f3ecbce437fbbc03bf0e18ec178ea803e3147e731aec47908c5"
+  },
+  "id": "wwDCx1AidkwJwY6O",
+  "tags": []
+}

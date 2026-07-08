@@ -1,0 +1,1059 @@
+{
+  "name": "AI Outreach",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyWeek"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/u/0/folders/1SDUy6df3YzMrgV6d2lN6UsRVYmLrpi29",
+          "mode": "url"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -816,
+        192
+      ],
+      "id": "934238d7-a5ec-4eac-9e94-e3f79b9fdc2e",
+      "name": "Get-Google-Sheet-File",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3R2h3fx2XDZyn1IS",
+          "name": "Google Drive Training"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Get-Google-Sheet-File').item.json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -608,
+        192
+      ],
+      "id": "7994366b-d87d-4007-b3ac-0cad8e59feea",
+      "name": "Get-Data-From-Google-Sheet-File",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "EEgDNy28fcUJxZFm",
+          "name": "Google Sheets TRAINING"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -304,
+        192
+      ],
+      "id": "0449df38-5eff-440e-96eb-3582f077e7ee",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        416
+      ],
+      "id": "d894422a-4f79-4ff1-a8af-f424fe913b7b",
+      "name": "Wait",
+      "webhookId": "828c79b6-47dc-43fd-99e7-a811c7989c7c"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "47d13519-2f3e-4c51-b716-1a27398d653f",
+              "name": "business_name",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "cad37caf-8d67-4b66-a0e6-95edac65e9f7",
+              "name": "business_owner",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "4931e7aa-ebd0-4932-a7e3-b80147500e58",
+              "name": "industry",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -864,
+        1200
+      ],
+      "id": "c0ff7311-d05f-4bda-9ba2-f3afb5e3d6e9",
+      "name": "Set-Business-Parameters"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.instantly.ai/api/v2/leads",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer NmFkZWJiNTMtZDI2ZC00YWU1LThkOTAtNWJlY2MzNWRkNzY5OlhpWGNLWGVTY2JlZA=="
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"campaign\": \"0a056afe-f772-4ee4-ab86-faf4dab28a7d\",\n  \"email\": \"{{ $('Structure-Form-Response').item.json.body.email }}\",\n  \"full_name\": \"{{ $('Google Sheets Trigger').item.json.Name.split()[0] }}\",\n  \"company\": \"{{ $('Get-Company-Domain').item.json.domain }}\"\n}",
+        "options": {}
+      },
+      "id": "1466de0d-0982-451e-b445-cca5e891d1ac",
+      "name": "Prospects-Campaign-Instantly",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        928,
+        976
+      ],
+      "typeVersion": 4.2,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "56c1d687-a321-454d-8ef1-fd530fe09ab2",
+              "leftValue": "={{ $('Workflow-Parameters').item.json.instantly_integration }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        1104
+      ],
+      "id": "5e7cd37c-d639-425f-b0f6-50c0c94e2a41",
+      "name": "Instantly-or-Sheets-File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f3d31873-68c2-48f9-b8c5-eb4ffaa8a133",
+              "name": "instantly_integration",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "fcf2a801-addd-46ea-b75d-56f0fb58d6e8",
+              "name": "scraping_bee_apy_key",
+              "value": "ABY1BXLEX1Y4Y1VA25ROZEA2I1P70B6YHQKGNV4ESEGCMCS97IWOZ8204MMBZYH0J45P13WR5XGV5QJR",
+              "type": "string"
+            },
+            {
+              "id": "e9d5cf92-ea51-494e-8433-180652118655",
+              "name": "unipile_dsn",
+              "value": "api19.unipile.com:14942",
+              "type": "string"
+            },
+            {
+              "id": "3eb75d46-a68a-4f79-a165-a2df1290b435",
+              "name": "unipile_account_id",
+              "value": "np55ych0Sxe0QqzusuHKPg",
+              "type": "string"
+            },
+            {
+              "id": "165b22f3-dc36-48b4-887d-88a7fdf752ae",
+              "name": "unipile_access_token",
+              "value": "1Sb00mAN.WHlIdQeKkvSLqBW15K7a3TcUmCpaIqKtJdod9FUuyVo=",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -608,
+        1200
+      ],
+      "id": "79f1a5c2-54a4-436e-a9a0-ef8a8c5772e2",
+      "name": "Workflow-Parameters"
+    },
+    {
+      "parameters": {
+        "url": "=https://app.scrapingbee.com/api/v1/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": "={{ $('Workflow-Parameters').item.json.scraping_bee_apy_key }}"
+            },
+            {
+              "name": "url",
+              "value": "={{ $json.website_url }}"
+            },
+            {
+              "name": "country_code",
+              "value": "us"
+            },
+            {
+              "name": "wait",
+              "value": "1000"
+            },
+            {
+              "name": "screenshot",
+              "value": "false"
+            },
+            {
+              "name": "block_resources",
+              "value": "false"
+            },
+            {
+              "name": "render_js",
+              "value": "true"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true,
+          "redirect": {
+            "redirect": {}
+          },
+          "timeout": 60000
+        }
+      },
+      "id": "2a577e24-5184-43ea-bd86-64b8916ecc0a",
+      "name": "Scrape Website-ScrapingBee",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -400,
+        1216
+      ],
+      "notesInFlow": true,
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput",
+      "notes": "Fetches the raw HTML content from the URL the user submitted."
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4.1-mini",
+        "prompt": {
+          "messages": [
+            {
+              "role": "assistant",
+              "content": "=You are an assistant that generates short, personalised outreach emails.  \n\nObjective: Return ONLY the following structure without adding anything else:  \n\nHi {{ $('Get-Data-From-Google-Sheet-File').item.json.first_name }},  \n\nI was on your website and noticed that you [use 5-8 words to describe the company] which is why I wanted to reach out.  \n\nInstructions:  \n- Replace [use 5-8 words to describe the company] with an accurate 5–8 word description of what the company does.  \n- Use only the following sources for this description:  \n   • {{ $('Scrape Website-ScrapingBee').item.json }}  \n   • {{ $('Scrape Linkedin-Company-Profile').first().json.description }}  \n- If helpful for context, also consider the industry field:  \n   • {{ $('Scrape Linkedin-Company-Profile').first().json.industry }}  \n- Keep the description concise, neutral, and fact-based.  \n- Do not add extra sentences, comments, or formatting. Return only the two lines in the format above.\n"
+            }
+          ]
+        },
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "9bc17175-07c7-429a-9ebc-e6d56e902730",
+      "name": "Create Personalised Message",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        384,
+        1104
+      ],
+      "notesInFlow": true,
+      "notes": "This is the core logic. It sends the website HTML to an AI model and asks it to return a structured JSON object describing the business. \n\n**IMPORTANT**: You must enable JSON mode in the options for this to work reliably."
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Get-Google-Sheet-File').item.json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": 0,
+            "Message": "={{ $json.message.content }}",
+            "index": "={{ $('Get-Data-From-Google-Sheet-File').item.json.index }}"
+          },
+          "matchingColumns": [
+            "index"
+          ],
+          "schema": [
+            {
+              "id": "index",
+              "displayName": "index",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "personal_email",
+              "displayName": "personal_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email_status",
+              "displayName": "email_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_primary_domain",
+              "displayName": "organization_primary_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "linkedin_url",
+              "displayName": "linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_name",
+              "displayName": "organization_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_linkedin_url",
+              "displayName": "organization_linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "headline",
+              "displayName": "headline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_id",
+              "displayName": "organization_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "website_url",
+              "displayName": "website_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "phone_number",
+              "displayName": "phone_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_founded_year",
+              "displayName": "organization_founded_year",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "function",
+              "displayName": "function",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_twitter_url",
+              "displayName": "organization_twitter_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_facebook_url",
+              "displayName": "organization_facebook_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "alexa_ranking",
+              "displayName": "alexa_ranking",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_logo_url",
+              "displayName": "organization_logo_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "estimated_num_employees",
+              "displayName": "estimated_num_employees",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "industries",
+              "displayName": "industries",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "secondary_industries",
+              "displayName": "secondary_industries",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "raw_address",
+              "displayName": "raw_address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "street_address",
+              "displayName": "street_address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_city",
+              "displayName": "organization_city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_state",
+              "displayName": "organization_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_country",
+              "displayName": "organization_country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organization_postal_code",
+              "displayName": "organization_postal_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        288
+      ],
+      "id": "6288d27c-6e92-4baa-8bd4-8808f0a224dd",
+      "name": "Write-Personalised-Message-in-Sheet-File",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "EEgDNy28fcUJxZFm",
+          "name": "Google Sheets TRAINING"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://{{ $('Workflow-Parameters').item.json.unipile_dsn }}/api/v1/linkedin/company/{{ $json.organization_linkedin_url.split('/').last() }}?account_id={{ $('Workflow-Parameters').item.json.unipile_account_id }}\n\n\n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "X-API-KEY",
+              "value": "={{ $('Workflow-Parameters').item.json.unipile_access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "691c19a1-14d1-48a5-8a49-c66abc586095",
+      "name": "Scrape Linkedin-Company-Profile",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        128,
+        1232
+      ],
+      "notesInFlow": true,
+      "notes": "Fetches the raw HTML content from the URL the user submitted."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9b63da84-853b-4597-a946-0a96ef745b04",
+              "leftValue": "={{ $('Scrape Website-ScrapingBee').item.json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -160,
+        1120
+      ],
+      "id": "d2436134-7fd1-4252-a5a5-363544ca6aee",
+      "name": "Website-Scraping-is-Empty"
+    },
+    {
+      "parameters": {
+        "content": "## Second Step",
+        "height": 544,
+        "width": 2064
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -912,
+        912
+      ],
+      "typeVersion": 1,
+      "id": "3e2bab48-4bc4-495d-85f5-dd528ded690f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an assistant that generates short, personalised outreach emails.  \n\nObjective: Return ONLY the following structure without adding anything else:  \n\nI was on your website and noticed that you [use 5-8 words to describe the company] which is why I wanted to reach out.  \n\nInstructions:  \n- Replace [use 5-8 words to describe the company] with an accurate 5–8 word description of what the company does.  \n- Search the internet to find the information about the \n{{ $json.website_url }}\n\n- Keep the description concise, neutral, and fact-based.  \n- Do not add extra sentences, comments, or formatting. Return only the two lines in the format above.\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -16,
+        288
+      ],
+      "id": "589895b4-04eb-4868-b2cc-13b0b7c4ab9a",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "mfy5MQakuAKWhUNd",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1237818-a178-4538-a600-8f1927f99174",
+              "name": "a",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "01c58c40-61e6-4a44-912a-7acbf74ca1b6",
+      "name": "Done"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get-Google-Sheet-File": {
+      "main": [
+        [
+          {
+            "node": "Get-Data-From-Google-Sheet-File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get-Data-From-Google-Sheet-File": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set-Business-Parameters": {
+      "main": [
+        [
+          {
+            "node": "Workflow-Parameters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instantly-or-Sheets-File": {
+      "main": [
+        [
+          {
+            "node": "Prospects-Campaign-Instantly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Website-ScrapingBee": {
+      "main": [
+        [
+          {
+            "node": "Website-Scraping-is-Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Scrape Linkedin-Company-Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Personalised Message": {
+      "main": [
+        [
+          {
+            "node": "Instantly-or-Sheets-File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write-Personalised-Message-in-Sheet-File": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Website-Scraping-is-Empty": {
+      "main": [
+        [
+          {
+            "node": "Create Personalised Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Scrape Linkedin-Company-Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Linkedin-Company-Profile": {
+      "main": [
+        [
+          {
+            "node": "Create Personalised Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Write-Personalised-Message-in-Sheet-File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6c4fcdde-7e9f-46ed-af6f-61800f7d591e",
+  "meta": {
+    "instanceId": "80992d3a6cc90f3ecbce437fbbc03bf0e18ec178ea803e3147e731aec47908c5"
+  },
+  "id": "yRdPoBHVa4OlgxjC",
+  "tags": []
+}
