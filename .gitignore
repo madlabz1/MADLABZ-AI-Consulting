@@ -4,3 +4,5 @@ venv/
 .gemini/
 get_transcript.py
 transcript.txt
+
+.vercel
