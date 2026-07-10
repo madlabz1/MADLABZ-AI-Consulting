@@ -109,13 +109,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       console.log('Form Submitted successfully:', data);
 
-      // Save lead to localStorage for local demo simulation
-      let currentLeads = JSON.parse(localStorage.getItem('madlabz_leads') || '[]');
-      currentLeads.push(data);
-      localStorage.setItem('madlabz_leads', JSON.stringify(currentLeads));
-
-      // Re-render the simulated CRM database
-      renderLeadsTable();
+      // PRO TIP: To wire this to a live CRM (e.g. GoHighLevel, n8n, or HubSpot), uncomment the following:
+      /*
+      fetch('YOUR_WEBHOOK_URL', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(response => console.log('Webhook sent:', response))
+      .catch(error => console.error('Webhook error:', error));
+      */
 
       // Animation: Fade out form and headers, Fade in success message
       bookingForm.style.transition = 'opacity 0.4s ease';
@@ -185,49 +188,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-
-  // --- 6. Simulated Lead Database Render ---
-  function renderLeadsTable() {
-    const tableBody = document.getElementById('leads-table-body');
-    if (!tableBody) return;
-
-    const leads = JSON.parse(localStorage.getItem('madlabz_leads') || '[]');
-    
-    if (leads.length === 0) {
-      tableBody.innerHTML = `
-        <tr>
-          <td colspan="6" style="padding: 2rem; text-align: center;" id="no-leads-row">No leads captured yet. Fill in and submit the booking form above to populate this simulated database.</td>
-        </tr>
-      `;
-      return;
-    }
-
-    tableBody.innerHTML = leads.map(lead => {
-      const packageLabel = lead.package === 'smb-audit' ? 'SMB Audit (From $5,000)' : 'Enterprise Audit (From $20,000)';
-      const industryLabel = lead.industry.charAt(0).toUpperCase() + lead.industry.slice(1);
-      
-      return `
-        <tr style="border-bottom: 1px solid var(--glass-border);">
-          <td style="padding: 1rem; color: var(--text-main); font-weight: 500;">${escapeHtml(lead.name)}</td>
-          <td style="padding: 1rem;">${escapeHtml(lead.email)}</td>
-          <td style="padding: 1rem;">${escapeHtml(lead.company)}</td>
-          <td style="padding: 1rem;">${escapeHtml(industryLabel)}</td>
-          <td style="padding: 1rem; color: var(--accent-cyan);">${packageLabel}</td>
-          <td style="padding: 1rem; font-size: 0.9rem; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(lead.message)}">${escapeHtml(lead.message || 'N/A')}</td>
-        </tr>
-      `;
-    }).join('');
-  }
-
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/&/g, "&amp;")
-              .replace(/</g, "&lt;")
-              .replace(/>/g, "&gt;")
-              .replace(/"/g, "&quot;")
-              .replace(/'/g, "&#039;");
-  }
-
-  // Initial render of leads table
-  renderLeadsTable();
 });
