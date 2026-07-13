@@ -1,5 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {
   
+  // --- 0. Currency Geo-Detection ---
+  let currencySymbol = '$';
+  
+  function detectCurrency() {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      const locale = navigator.language || '';
+      
+      // Check if UK-based (London timezone or GB locale)
+      if (tz === 'Europe/London' || locale.toLowerCase().includes('gb') || locale.toLowerCase().includes('uk')) {
+        currencySymbol = '£';
+      } 
+      // Check if Eurozone
+      else if (tz.startsWith('Europe/') && tz !== 'Europe/London') {
+        currencySymbol = '€';
+      }
+    } catch (e) {
+      console.warn('Currency detection failed, defaulting to USD:', e);
+    }
+  }
+
+  detectCurrency();
+
+  // Apply currency symbol to select options and static displays
+  function applyCurrencyToStaticElements() {
+    const packageSelect = document.getElementById('client-package');
+    if (packageSelect) {
+      const smbOption = packageSelect.querySelector('option[value="smb-audit"]');
+      if (smbOption) {
+        smbOption.textContent = `SMB Audit (From ${currencySymbol}5,000)`;
+      }
+      const entOption = packageSelect.querySelector('option[value="ent-audit"]');
+      if (entOption) {
+        entOption.textContent = `Enterprise Audit (From ${currencySymbol}20,000)`;
+      }
+    }
+  }
+
+  applyCurrencyToStaticElements();
+
   // --- 1. Interactive ROI Calculator Logic ---
   const employeesInput = document.getElementById('employees-input');
   const hoursInput = document.getElementById('hours-input');
@@ -21,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update Slider Value Texts
     employeesVal.textContent = employees;
     hoursVal.textContent = `${hoursWasted} hrs`;
-    rateVal.textContent = `$${hourlyRate}/hr`;
+    rateVal.textContent = `${currencySymbol}${hourlyRate}/hr`;
 
     // Calculations
     const weeklyHoursWasted = employees * hoursWasted;
@@ -42,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Format and Render Outputs
     resultHours.textContent = `${Math.round(annualHoursWasted).toLocaleString()} hrs`;
-    resultCash.textContent = `$${Math.round(annualCashLeakage).toLocaleString()}`;
+    resultCash.textContent = `${currencySymbol}${Math.round(annualCashLeakage).toLocaleString()}`;
     
     if (roiPercentage > 0) {
       resultRoi.textContent = `${Math.round(roiPercentage).toLocaleString()}%`;
