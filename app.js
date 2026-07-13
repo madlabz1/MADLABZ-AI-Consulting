@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 3. Form Submission Simulation ---
+  // --- 3. Form Submission Integration ---
   const bookingForm = document.getElementById('audit-booking-form');
   const successMessage = document.getElementById('booking-success-message');
   const bookingTitle = document.getElementById('booking-title');
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bookingForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Collect data (simulated submission)
+      // Collect data
       const data = {
         name: document.getElementById('client-name').value,
         email: document.getElementById('client-email').value,
@@ -131,44 +131,72 @@ document.addEventListener('DOMContentLoaded', () => {
         message: document.getElementById('client-message').value
       };
 
-      console.log('Form Submitted successfully:', data);
+      // Set button to loading state
+      const submitBtn = bookingForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn ? submitBtn.textContent : 'Submit Audit Request';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+      }
 
-      // PRO TIP: To wire this to a live CRM (e.g. GoHighLevel, n8n, or HubSpot), uncomment the following:
-      /*
-      fetch('YOUR_WEBHOOK_URL', {
+      // Format payload for Formsubmit.co
+      const payload = {
+        _subject: "Madlabz Consulting form submission",
+        "Full Name": data.name,
+        "Email Address": data.email,
+        "Company Name": data.company,
+        "Company Size": data.size === 'smb' ? 'Small-Medium (10-50 employees)' : 'Medium-Large (50-200+ employees)',
+        "Industry": data.industry,
+        "Selected Package": data.package === 'smb-audit' ? 'SMB AI Audit' : 'Enterprise AI Audit',
+        "Message / Bottlenecks": data.message
+      };
+
+      fetch('https://formsubmit.co/ajax/madlabzuk.a@gmail.com', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
       })
-      .then(response => console.log('Webhook sent:', response))
-      .catch(error => console.error('Webhook error:', error));
-      */
+      .then(response => response.json())
+      .then(res => {
+        console.log('Form submission successful:', res);
 
-      // Animation: Fade out form and headers, Fade in success message
-      bookingForm.style.transition = 'opacity 0.4s ease';
-      bookingForm.style.opacity = '0';
-      if (bookingTitle) {
-        bookingTitle.style.transition = 'opacity 0.4s ease';
-        bookingTitle.style.opacity = '0';
-      }
-      if (bookingSubtitle) {
-        bookingSubtitle.style.transition = 'opacity 0.4s ease';
-        bookingSubtitle.style.opacity = '0';
-      }
-      
-      setTimeout(() => {
-        bookingForm.style.display = 'none';
-        if (bookingTitle) bookingTitle.style.display = 'none';
-        if (bookingSubtitle) bookingSubtitle.style.display = 'none';
+        // Animation: Fade out form and headers, Fade in success message
+        bookingForm.style.transition = 'opacity 0.4s ease';
+        bookingForm.style.opacity = '0';
+        if (bookingTitle) {
+          bookingTitle.style.transition = 'opacity 0.4s ease';
+          bookingTitle.style.opacity = '0';
+        }
+        if (bookingSubtitle) {
+          bookingSubtitle.style.transition = 'opacity 0.4s ease';
+          bookingSubtitle.style.opacity = '0';
+        }
         
-        successMessage.style.display = 'block';
-        successMessage.style.opacity = '0';
-        successMessage.style.transition = 'opacity 0.4s ease';
-        
-        // Trigger reflow to apply transitions
-        successMessage.offsetHeight;
-        successMessage.style.opacity = '1';
-      }, 400);
+        setTimeout(() => {
+          bookingForm.style.display = 'none';
+          if (bookingTitle) bookingTitle.style.display = 'none';
+          if (bookingSubtitle) bookingSubtitle.style.display = 'none';
+          
+          successMessage.style.display = 'block';
+          successMessage.style.opacity = '0';
+          successMessage.style.transition = 'opacity 0.4s ease';
+          
+          // Trigger reflow to apply transitions
+          successMessage.offsetHeight;
+          successMessage.style.opacity = '1';
+        }, 400);
+      })
+      .catch(error => {
+        console.error('Form submission error:', error);
+        alert('There was an error submitting your request. Please try again or email us at madlabzuk.a@gmail.com.');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+        }
+      });
     });
   }
 
