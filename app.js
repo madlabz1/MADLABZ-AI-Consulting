@@ -23,22 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   detectCurrency();
 
-  // Apply currency symbol to select options and static displays
-  function applyCurrencyToStaticElements() {
-    const packageSelect = document.getElementById('client-package');
-    if (packageSelect) {
-      const smbOption = packageSelect.querySelector('option[value="smb-audit"]');
-      if (smbOption) {
-        smbOption.textContent = `SMB Audit (From ${currencySymbol}5,000)`;
-      }
-      const entOption = packageSelect.querySelector('option[value="ent-audit"]');
-      if (entOption) {
-        entOption.textContent = `Enterprise Audit (From ${currencySymbol}20,000)`;
-      }
-    }
-  }
-
-  applyCurrencyToStaticElements();
 
   // --- 1. Interactive ROI Calculator Logic ---
   const employeesInput = document.getElementById('employees-input');
