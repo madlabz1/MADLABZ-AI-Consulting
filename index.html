@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="description" content="MADLABZ AI Consulting delivers robust, ROI-focused AI Audits, implementations, and managed maintenance for professional services, agencies, real estate, and trade-based businesses.">
   <title>MADLABZ AI Consulting | ROI-Driven AI Strategy & Audits</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -21,11 +24,12 @@
             <li><a href="#why-fail">The 95% Problem</a></li>
             <li><a href="#blueprint">Our Blueprint</a></li>
             <li><a href="#roi-calculator">ROI Calculator</a></li>
-            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#pricing">Audit Packages</a></li>
+            <li><a href="#resources">Resource Hub</a></li>
             <li><a href="#booking">Book Audit</a></li>
           </ul>
         </nav>
-        <a href="#booking" class="btn btn-primary" id="nav-cta-btn">Book Audit</a>
+        <a href="#booking" class="btn btn-primary" id="nav-cta-btn" onclick="selectPackage('mini-audit')">Free 15-Min Audit</a>
       </div>
     </div>
   </header>
@@ -35,14 +39,14 @@
     <div class="container">
       <div class="grid-2 hero-grid">
         <div class="hero-text-content">
-          <div class="hero-badge" id="hero-announcement">Clarity Over Hype • Outcomes Over Code</div>
+          <div class="hero-badge" id="hero-announcement">Clarity Over Hype • Zero Risk • 15 Minutes</div>
           <h1 id="hero-heading">We Hunt Down Bottlenecks.<br>You Get Real <span class="gradient-text">AI ROI</span>.</h1>
           <p class="subtitle" id="hero-lead">
-            We conduct rigorous AI audits for professional services, agencies, real estate, and trade-based businesses to identify, prescribe, and scale automated workflows. No fluff. Just logic.
+            We conduct rigorous AI audits for professional services, agencies, real estate, and trade-based businesses to identify, prescribe, and scale automated workflows. Start with our <strong>Free 15-Minute Mini AI Audit</strong>.
           </p>
           <div class="hero-actions" id="hero-buttons">
-            <a href="#roi-calculator" class="btn btn-primary" id="hero-primary-cta">Calculate Your Savings</a>
-            <a href="#blueprint" class="btn btn-secondary" id="hero-secondary-cta">Explore The Blueprint</a>
+            <a href="#pricing" class="btn btn-primary" style="background: var(--accent-gradient);" id="hero-free-audit-cta" onclick="selectPackage('mini-audit')">⚡ Claim Free 15-Min Audit</a>
+            <a href="#roi-calculator" class="btn btn-secondary" id="hero-primary-cta">Calculate Your Savings</a>
           </div>
         </div>
         <div class="hero-image-content reveal" id="hero-graphic-container">
@@ -210,16 +214,35 @@
     </div>
   </section>
 
-  <!-- Pricing Section -->
+  <!-- Audit Packages Section -->
   <section class="section" id="pricing">
     <div class="container">
       <div class="section-header reveal" id="pricing-header">
-        <h2>Customized AI Readiness <span class="gradient-text">Audits</span></h2>
-        <p class="subtitle" style="margin: 0 auto;" id="pricing-subtitle">Our audits are tailored to your company's headcount and operational complexity. Request a discovery call for a custom quote.</p>
+        <h2>Audit Packages & <span class="gradient-text">Free AI Audit</span></h2>
+        <p class="subtitle" style="margin: 0 auto;" id="pricing-subtitle">Start with our zero-risk 15-Minute Free AI Audit, or request a customized multi-department audit package for your team.</p>
       </div>
       <div class="pricing-grid">
         
-        <!-- Package 1 -->
+        <!-- Package 1: Free Mini AI Audit -->
+        <div class="pricing-card premium reveal" id="package-mini" style="border: 2px solid var(--accent-cyan);">
+          <div class="pricing-badge" id="mini-badge" style="background: var(--accent-cyan); color: #090714; font-weight: 800;">MOST POPULAR ENTRY</div>
+          <div class="pricing-header">
+            <h3>Free 15-Min AI Audit</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;" id="mini-target">15-Minute Zero-Risk Diagnostic Call</p>
+          </div>
+          <div class="pricing-price" id="mini-price" style="color: var(--accent-cyan); font-size: 2.5rem;">FREE<span>(No obligation / zero pressure)</span></div>
+          <ul class="pricing-features" id="mini-features">
+            <li>15-Minute Diagnostic Session</li>
+            <li>5 Core Friction Discovery Questions</li>
+            <li>Top 2 Process Bottlenecks Analyzed</li>
+            <li>Cash Leakage Scorecard</li>
+            <li>Top 3 Quick-Win Automation Targets</li>
+            <li>Same-Day Recommendations</li>
+          </ul>
+          <a href="#booking" class="btn btn-primary" style="text-align: center; background: var(--accent-gradient);" id="mini-select-btn" onclick="selectPackage('mini-audit')">Claim Free 15-Min Audit</a>
+        </div>
+
+        <!-- Package 2: SMB AI Audit -->
         <div class="pricing-card reveal" id="package-smb">
           <div class="pricing-header">
             <h3>SMB AI Audit</h3>
@@ -234,12 +257,12 @@
             <li>Estimated ROI Calculator</li>
             <li>2-Week Delivery Timeline</li>
           </ul>
-          <a href="#booking" class="btn btn-secondary" style="text-align: center;" id="smb-select-btn">Select SMB Audit</a>
+          <a href="#booking" class="btn btn-secondary" style="text-align: center;" id="smb-select-btn" onclick="selectPackage('smb-audit')">Select SMB Audit</a>
         </div>
 
-        <!-- Package 2 -->
-        <div class="pricing-card premium reveal" id="package-enterprise">
-          <div class="pricing-badge" id="enterprise-badge">Most Popular</div>
+        <!-- Package 3: Enterprise AI Audit -->
+        <div class="pricing-card reveal" id="package-enterprise">
+          <div class="pricing-badge" id="enterprise-badge">Full Scale</div>
           <div class="pricing-header">
             <h3>Enterprise AI Audit</h3>
             <p style="color: var(--text-muted); font-size: 0.9rem;" id="enterprise-target">For operations with 50 to 200+ staff</p>
@@ -253,15 +276,44 @@
             <li>Phased 18-Month Deployment Road Map</li>
             <li>Custom Year 1 ROI Dashboard</li>
             <li>Security & API Compliance Risk Checks</li>
-            <li>Stakeholder Co-Creation Workshop</li>
           </ul>
-          <a href="#booking" class="btn btn-primary" style="text-align: center;" id="enterprise-select-btn">Select Enterprise Audit</a>
+          <a href="#booking" class="btn btn-secondary" style="text-align: center;" id="enterprise-select-btn" onclick="selectPackage('ent-audit')">Select Enterprise Audit</a>
         </div>
 
       </div>
       <p class="pricing-subtext reveal" id="pricing-disclaimer">
-        * Note: AI Audit pricing is scoped individually after a brief discovery call. Implementation, staff onboarding training, and retainer consultancy are quoted separately based on audit specifications and partner resources.
+        * Note: The 15-Minute Mini AI Audit is 100% free with no obligation. Comprehensive SMB & Enterprise AI Audits are scoped individually after a discovery call.
       </p>
+    </div>
+  </section>
+
+  <!-- AI Services Resource Library Section -->
+  <section class="section" id="resources">
+    <div class="container">
+      <div class="section-header reveal" id="resources-header">
+        <h2>Free AI Services <span class="gradient-text">Resource Library</span></h2>
+        <p class="subtitle" style="margin: 0 auto;" id="resources-subtitle">
+          Everything referenced in our AI Services framework, organized in one place. Use these playbooks, report templates, and objection guides to streamline your SME AI transformation.
+        </p>
+      </div>
+
+      <!-- Resource Filter & Search Bar -->
+      <div class="resource-controls reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2.5rem;">
+        <div class="resource-categories" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="res-filter-btn active" data-category="all" style="padding: 0.5rem 1rem; border-radius: 50px; background: rgba(133, 51, 255, 0.2); border: 1px solid var(--accent-purple); color: #fff; cursor: pointer; font-size: 0.85rem;">All Resources</button>
+          <button class="res-filter-btn" data-category="assessment" style="padding: 0.5rem 1rem; border-radius: 50px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); color: var(--text-muted); cursor: pointer; font-size: 0.85rem;">Assessments</button>
+          <button class="res-filter-btn" data-category="concierge" style="padding: 0.5rem 1rem; border-radius: 50px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); color: var(--text-muted); cursor: pointer; font-size: 0.85rem;">Concierge & Retainers</button>
+          <button class="res-filter-btn" data-category="sales" style="padding: 0.5rem 1rem; border-radius: 50px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); color: var(--text-muted); cursor: pointer; font-size: 0.85rem;">Sales & Objections</button>
+        </div>
+        <div class="resource-search" style="position: relative; width: 100%; max-width: 300px;">
+          <input type="text" id="resource-search-input" placeholder="Search resources & playbooks..." style="width: 100%; padding: 0.6rem 1rem; border-radius: 50px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: #fff; font-size: 0.85rem; outline: none;">
+        </div>
+      </div>
+
+      <!-- Resource Grid Container -->
+      <div class="grid-3" id="resource-grid-container">
+        <!-- Dynamic resource cards rendered via app.js -->
+      </div>
     </div>
   </section>
 
@@ -294,6 +346,7 @@
               <label for="client-size">Company Size</label>
               <select id="client-size" required>
                 <option value="" disabled selected>Select size...</option>
+                <option value="mini">1-10 Staff / Micro (Free 15-Min Audit)</option>
                 <option value="smb">Small-Medium (10-50 employees)</option>
                 <option value="enterprise">Medium-Large (50-200+ employees)</option>
               </select>
@@ -316,9 +369,9 @@
             <div class="form-group" id="group-package">
               <label for="client-package">Audit Package Selected</label>
               <select id="client-package" required>
-                <option value="" disabled selected>Select package...</option>
-                <option value="smb-audit">SMB AI Audit</option>
-                <option value="ent-audit">Enterprise AI Audit</option>
+                <option value="mini-audit" selected>Free 15-Minute Mini AI Audit</option>
+                <option value="smb-audit">SMB AI Audit (Detailed Deep Dive)</option>
+                <option value="ent-audit">Enterprise AI Audit (Multi-Department)</option>
               </select>
             </div>
 
@@ -352,12 +405,13 @@
           <li><a href="#why-fail">Philosophy</a></li>
           <li><a href="#blueprint">Blueprint</a></li>
           <li><a href="#roi-calculator">ROI Calc</a></li>
+          <li><a href="#resources">Resource Hub</a></li>
           <li><a href="#booking">Booking</a></li>
         </ul>
       </div>
     </div>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

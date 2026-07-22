@@ -1,0 +1,63 @@
+{
+  "libraryTitle": "Free AI Services Resource Library",
+  "sourceUrl": "https://western-caravel-777.notion.site/Free-AI-Services-Resource-Library-3a34fd47b96f816fb37eda0bdb3f7444",
+  "description": "Everything referenced in the AI Services Business course, organized in one place. Use these resources to land clients, deliver assessments, fulfill recurring concierge work, and handle sales objections.",
+  "lastUpdated": "2026-07-22",
+  "resources": [
+    {
+      "id": "mini-assessment-playbook",
+      "category": "Assessment & Lead Gen",
+      "title": "1. The Mini AI Assessment Playbook",
+      "description": "A step-by-step playbook for running a free 15-minute mini assessment. It includes the discovery questions, meeting templates, research workflow, recommendation framework, and prep checklist for the follow-up call.",
+      "link": "https://app.notion.com/p/3754fd47b96f81359856c42ab166a60a",
+      "tags": ["Discovery Questions", "Meeting Templates", "Research Workflow", "Prep Checklist"],
+      "actionLabel": "Open Playbook"
+    },
+    {
+      "id": "assessment-report-template",
+      "category": "Templates & Deliverables",
+      "title": "2. AI Tools Assessment Report Template",
+      "description": "The blank six-part report template used to package a paid AI tools assessment. Use it to present pain points, recommended tools, quick wins, implementation priorities, and projected financial impact.",
+      "usageInstruction": "IMPORTANT: Download the HTML file then drag & drop it into Claude Design with this prompt: 'Import a clean copy of the Assessment template attached'",
+      "link": "https://drive.google.com/file/d/1FQGaxgVTHL22K7lKsiYjTFzvPqmWCE0j/view?usp=sharing",
+      "tags": ["HTML Deliverable", "Claude Design Template", "Financial Impact", "Quick Wins"],
+      "actionLabel": "Download HTML Template"
+    },
+    {
+      "id": "ai-concierge-playbook",
+      "category": "Concierge & Recurring SLA",
+      "title": "3. The AI Concierge Playbook",
+      "description": "A detailed blueprint for structuring and fulfilling the recurring AI Concierge offer. It covers onboarding, twice-monthly working sessions, the Audit–Optimize–Automate process, client communication, and the back-end workflow that keeps fulfillment lean.",
+      "link": "https://app.notion.com/p/38a4fd47b96f81979240d297a1e72ea2",
+      "tags": ["Onboarding", "Audit-Optimize-Automate", "Retainer SLA", "Lean Fulfillment"],
+      "actionLabel": "Open Concierge Blueprint"
+    },
+    {
+      "id": "sales-objections-guide",
+      "category": "Sales & Closing",
+      "title": "4. 8 Objections Every AI Services Prospect Raises",
+      "description": "Eight word-for-word responses to the most common objections that come up when selling AI services, including price, timing, and the belief that a prospect can simply figure it out themselves.",
+      "link": "https://app.notion.com/p/3754fd47b96f81749cf3f33d92c0d2d5",
+      "tags": ["Sales Objections", "Word-for-Word Scripts", "Closing", "Pricing Handling"],
+      "actionLabel": "View Objection Scripts"
+    },
+    {
+      "id": "ai-operator-academy",
+      "category": "Operating System & Training",
+      "title": "5. AI Operator Academy (Full Business in a Box)",
+      "description": "The complete AI Assessment and AI Concierge operating system including Claude skills, templates, client hub, intake workflow, onboarding plugin, and community support.",
+      "link": "https://aoa.community/video",
+      "tags": ["Operating System", "Claude Skills", "Client Hub", "Intake Workflows"],
+      "actionLabel": "Explore Operating System"
+    },
+    {
+      "id": "ai-services-course-video",
+      "category": "Video Training",
+      "title": "6. AI Services Business Full Course",
+      "description": "The complete video breakdown walking through how to structure, sell, and execute AI assessments and concierge services for SMEs.",
+      "link": "https://youtu.be/GP7ki1RdzJ4",
+      "tags": ["Video Course", "Strategy", "Execution", "SME Consulting"],
+      "actionLabel": "Watch Video Course"
+    }
+  ]
+}

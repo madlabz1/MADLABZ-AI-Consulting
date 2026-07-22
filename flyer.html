@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADLABZ Consulting | Free 15-Minute Mini AI Assessment Flyer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #070512;
+      --bg-card: rgba(18, 14, 36, 0.85);
+      --accent-purple: #8533ff;
+      --accent-cyan: #00f0ff;
+      --accent-indigo: #4f46e5;
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --text-dim: #94a3b8;
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --accent-gradient: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-cyan) 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.2rem 1rem;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(133, 51, 255, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(0, 240, 255, 0.12) 0%, transparent 45%);
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      width: 100%;
+      max-width: 860px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(18, 14, 36, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      padding: 0.8rem 1.2rem;
+      border-radius: 16px;
+      margin-bottom: 1rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .controls-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--accent-cyan);
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .controls-tip {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .btn {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.82rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: #090714;
+      box-shadow: 0 0 20px rgba(133, 51, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--glass-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* Sector Selector Filter */
+    .sector-selector {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 860px;
+    }
+
+    .sector-tab {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sector-tab.active, .sector-tab:hover {
+      background: rgba(133, 51, 255, 0.25);
+      border-color: var(--accent-purple);
+      color: #fff;
+    }
+
+    /* Flyer Card Container - Dark Theme Aesthetic matching Website */
+    .flyer-card {
+      width: 100%;
+      max-width: 860px;
+      background: #090714;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 1.6rem 2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 50px rgba(133, 51, 255, 0.2);
+    }
+
+    .flyer-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--accent-gradient);
+    }
+
+    /* Header */
+    .flyer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.7rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo-box img {
+      height: 40px;
+      width: auto;
+    }
+
+    .tagline-badge {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      color: var(--accent-cyan);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 0.95rem;
+      border-radius: 50px;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+
+    /* Hero Section - 2-Column Grid (Title/Subhead on Left, Image on Right) */
+    .flyer-hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.4rem;
+      align-items: center;
+      margin-bottom: 1.1rem;
+    }
+
+    .flyer-title-badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--accent-purple);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .flyer-headline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.05rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .gradient-text {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .flyer-subhead {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.42;
+      font-weight: 400;
+    }
+
+    .flyer-hero-img {
+      width: 100%;
+      height: auto;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(133, 51, 255, 0.25);
+    }
+
+    /* Grid 2 Cards - 2-Column Side-by-Side */
+    .flyer-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+    }
+
+    .info-card.alert {
+      border-color: rgba(239, 68, 68, 0.35);
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .info-card.success {
+      border-color: rgba(0, 240, 255, 0.35);
+      background: rgba(0, 240, 255, 0.05);
+    }
+
+    .card-header-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-header-badge.alert-text {
+      color: #f87171;
+    }
+
+    .card-header-badge.success-text {
+      color: var(--accent-cyan);
+    }
+
+    .card-icon-lg {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .bullet-list li {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+      line-height: 1.35;
+    }
+
+    .bullet-list li span.icon {
+      font-size: 1rem;
+      line-height: 1;
+      margin-top: 0.1rem;
+    }
+
+    /* QUADRANT LAYOUT (2x2 Grid) for How The 15-Minute Assessment Works */
+    .mini-playbook-section {
+      background: rgba(18, 14, 36, 0.85);
+      border: 1px solid rgba(133, 51, 255, 0.3);
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .playbook-header {
+      text-align: center;
+      margin-bottom: 0.7rem;
+    }
+
+    .playbook-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .playbook-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    /* 2x2 Quadrant Grid */
+    .quadrant-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .quadrant-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 0.7rem 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+    }
+
+    .step-num-lg {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      background: var(--accent-gradient);
+      color: #090714;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 0.9rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+    }
+
+    .quadrant-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+      margin-bottom: 0.15rem;
+    }
+
+    .step-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    /* Key Offer Metrics Banner */
+    .roi-banner {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: linear-gradient(135deg, rgba(133, 51, 255, 0.22) 0%, rgba(0, 240, 255, 0.22) 100%);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      border-radius: 12px;
+      padding: 0.75rem 0.5rem;
+      margin-bottom: 1.1rem;
+      text-align: center;
+    }
+
+    .roi-stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-val {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 1.7rem;
+      color: var(--accent-cyan);
+      line-height: 1;
+    }
+
+    .stat-lbl {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.2rem;
+    }
+
+    /* Footer CTA Block */
+    .flyer-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, rgba(133, 51, 255, 0.2) 0%, rgba(0, 240, 255, 0.2) 100%);
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 14px;
+      padding: 0.9rem 1.4rem;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+    }
+
+    .cta-text h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+
+    .cta-text p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .contact-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.3rem;
+    }
+
+    .contact-link {
+      color: var(--accent-cyan);
+      font-weight: 800;
+      font-size: 0.95rem;
+      text-decoration: none;
+      background: rgba(0, 240, 255, 0.15);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      border: 1px solid rgba(0, 240, 255, 0.4);
+    }
+
+    .contact-link:hover {
+      background: var(--accent-cyan);
+      color: #090714;
+    }
+
+    .qr-mockup {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--glass-border);
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+    }
+
+    .qr-img {
+      width: 50px;
+      height: 50px;
+      display: block;
+      border-radius: 6px;
+      background: #fff;
+      padding: 2px;
+    }
+
+    .qr-subtext {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+    }
+
+    /* STRICT PRINT STYLES - 100% IDENTICAL TO THE .HTML SCREEN VIEW */
+    @page {
+      size: A4 portrait;
+      margin: 4mm 6mm;
+    }
+
+    @media print {
+      html, body {
+        background-color: #070512 !important;
+        color: #f8fafc !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 100% !important;
+        overflow: hidden !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .controls-bar, .sector-selector {
+        display: none !important;
+      }
+
+      .flyer-card {
+        max-width: 100% !important;
+        height: 100% !important;
+        background: #070512 !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0.4rem 0.7rem !important;
+        color: #f8fafc !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .flyer-header {
+        margin-bottom: 0.4rem !important;
+        padding-bottom: 0.3rem !important;
+        border-bottom-color: rgba(255, 255, 255, 0.15) !important;
+      }
+
+      .logo-box img {
+        height: 34px !important;
+      }
+
+      .tagline-badge {
+        background: rgba(0, 240, 255, 0.15) !important;
+        color: #00f0ff !important;
+        border-color: rgba(0, 240, 255, 0.35) !important;
+        font-size: 0.68rem !important;
+        padding: 0.25rem 0.6rem !important;
+      }
+
+      /* ENFORCE EXACT 2-COLUMN HERO GRID IN PRINT */
+      .flyer-hero-grid {
+        display: grid !important;
+        grid-template-columns: 1.15fr 0.85fr !important;
+        margin-bottom: 0.4rem !important;
+        gap: 0.8rem !important;
+        align-items: center !important;
+      }
+
+      .flyer-headline {
+        font-size: 1.48rem !important;
+        color: #ffffff !important;
+        margin-bottom: 0.25rem !important;
+        line-height: 1.15 !important;
+      }
+
+      .gradient-text {
+        background: var(--accent-gradient) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+      }
+
+      .flyer-subhead {
+        font-size: 0.8rem !important;
+        color: #cbd5e1 !important;
+        line-height: 1.3 !important;
+      }
+
+      .flyer-hero-img {
+        width: 100% !important;
+        max-height: 145px !important;
+        height: 145px !important;
+        object-fit: cover !important;
+        border-color: rgba(0, 240, 255, 0.4) !important;
+      }
+
+      /* ENFORCE EXACT 2-COLUMN COMPARISON GRID IN PRINT */
+      .flyer-grid-2 {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        margin-bottom: 0.4rem !important;
+        gap: 0.7rem !important;
+      }
+
+      .info-card {
+        padding: 0.55rem 0.75rem !important;
+        background: rgba(18, 14, 36, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      }
+
+      .card-header-badge {
+        font-size: 0.88rem !important;
+        margin-bottom: 0.3rem !important;
+      }
+
+      .bullet-list {
+        gap: 0.3rem !important;
+      }
+
+      .bullet-list li {
+        font-size: 0.76rem !important;
+        color: #cbd5e1 !important;
+        line-height: 1.25 !important;
+      }
+
+      .mini-playbook-section {
+        margin-bottom: 0.4rem !important;
+        padding: 0.55rem 0.75rem !important;
+        background: rgba(18, 14, 36, 0.9) !important;
+        border: 1px solid rgba(133, 51, 255, 0.3) !important;
+      }
+
+      .playbook-header {
+        margin-bottom: 0.3rem !important;
+      }
+
+      .playbook-title {
+        color: #ffffff !important;
+        font-size: 0.95rem !important;
+      }
+
+      .playbook-subtitle {
+        color: #cbd5e1 !important;
+        font-size: 0.7rem !important;
+      }
+
+      /* ENFORCE EXACT 2x2 QUADRANT GRID IN PRINT */
+      .quadrant-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.5rem !important;
+      }
+
+      .quadrant-card {
+        padding: 0.45rem 0.6rem !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      }
+
+      .step-num-lg {
+        width: 26px !important;
+        height: 26px !important;
+        min-width: 26px !important;
+        font-size: 0.8rem !important;
+      }
+
+      .step-name {
+        color: #ffffff !important;
+        font-size: 0.82rem !important;
+      }
+
+      .step-desc {
+        color: #cbd5e1 !important;
+        font-size: 0.7rem !important;
+      }
+
+      /* ENFORCE EXACT METRICS BANNER IN PRINT */
+      .roi-banner {
+        display: flex !important;
+        justify-content: space-around !important;
+        margin-bottom: 0.4rem !important;
+        padding: 0.4rem 0.5rem !important;
+        background: linear-gradient(135deg, rgba(133, 51, 255, 0.25) 0%, rgba(0, 240, 255, 0.25) 100%) !important;
+        border: 1px solid rgba(0, 240, 255, 0.4) !important;
+      }
+
+      .stat-val {
+        color: #00f0ff !important;
+        font-size: 1.3rem !important;
+      }
+
+      .stat-lbl {
+        color: #cbd5e1 !important;
+        font-size: 0.64rem !important;
+      }
+
+      /* ENFORCE EXACT FOOTER CTA IN PRINT */
+      .flyer-footer {
+        display: flex !important;
+        justify-content: space-between !important;
+        padding: 0.55rem 0.9rem !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1.5px solid #00f0ff !important;
+      }
+
+      .cta-text h3 {
+        color: #ffffff !important;
+        font-size: 0.95rem !important;
+      }
+
+      .cta-text p {
+        color: #cbd5e1 !important;
+        font-size: 0.72rem !important;
+      }
+
+      .contact-link {
+        color: #00f0ff !important;
+        font-size: 0.85rem !important;
+      }
+
+      .qr-img {
+        width: 44px !important;
+        height: 44px !important;
+      }
+    }
+
+    /* SCREEN ONLY BREAKPOINT FOR SMALL MOBILE SCREENS */
+    @media screen and (max-width: 768px) {
+      .flyer-hero-grid, .flyer-grid-2, .quadrant-grid, .flyer-footer {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .contact-details {
+        align-items: flex-start;
+      }
+      .flyer-card {
+        padding: 1.2rem;
+      }
+      .flyer-headline {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Controls Bar -->
+  <div class="controls-bar">
+    <div class="controls-title">
+      <span>🚀 MADLABZ Free AI Audit Flyer (Identical PDF & Web)</span>
+      <span class="controls-tip">💡 <strong>Print Tip:</strong> Uncheck "Headers & footers" in print settings to remove URLs.</span>
+    </div>
+    <div class="action-btns">
+      <button onclick="window.print()" class="btn btn-primary">🖨️ Print / Save Dark 1-Page PDF</button>
+      <a href="index.html" class="btn btn-secondary">🌐 View Website</a>
+    </div>
+  </div>
+
+  <!-- Sector Selector Filter -->
+  <div class="sector-selector">
+    <button class="sector-tab active" onclick="switchSector('all')">All SMEs</button>
+    <button class="sector-tab" onclick="switchSector('prof-services')">Accounting & Professional Services</button>
+    <button class="sector-tab" onclick="switchSector('agencies')">Digital & Creative Agencies</button>
+    <button class="sector-tab" onclick="switchSector('realestate')">Real Estate & Property Management</button>
+    <button class="sector-tab" onclick="switchSector('trades')">Trades & Construction</button>
+  </div>
+
+  <!-- Main Flyer Container (Dark Theme Aesthetic • Strict 1-Page Layout) -->
+  <div class="flyer-card" id="flyer">
+    
+    <!-- Flyer Header with PROMINENT "FREE AI AUDIT" BADGE -->
+    <div class="flyer-header">
+      <div class="logo-box">
+        <img src="madlabz_logo.png" alt="MADLABZ Consulting Logo">
+      </div>
+      <div class="tagline-badge">FREE AI AUDIT • ZERO RISK • 15 MINUTES</div>
+    </div>
+
+    <!-- Hero Headline & Full-Sized Visual Artwork (2-Column Grid) -->
+    <div class="flyer-hero-grid">
+      <div>
+        <span class="flyer-title-badge">⚡ FREE AI AUDIT — THE MINI ASSESSMENT PLAYBOOK</span>
+        <h1 class="flyer-headline" id="main-headline">
+          Discover Where Your Business Is <span class="gradient-text">Leaking Cash</span> in Just 15 Minutes.
+        </h1>
+        <p class="flyer-subhead" id="main-subhead">
+          In a free 15-minute diagnostic session, we identify your top 3 operational bottleneck tasks and calculate your exact annual cash leakage—no sales pitch, no tech jargon, zero obligation.
+        </p>
+      </div>
+      <div>
+        <img src="mini_audit.png" alt="Free 15-Minute Mini AI Audit" class="flyer-hero-img">
+      </div>
+    </div>
+
+    <!-- Grid 2: Hidden Friction vs What You Walk Away With (2-Column Grid) -->
+    <div class="flyer-grid-2">
+      
+      <!-- Card 1: Invisible Friction -->
+      <div class="info-card alert">
+        <div class="card-header-badge alert-text">
+          <span class="card-icon-lg">🚨</span> Invisible Drag on SME Profits
+        </div>
+        <ul class="bullet-list" id="problem-list">
+          <li><span class="icon">❌</span> Staff waste 10–15 hours/week copying data, chasing files & typing reports.</li>
+          <li><span class="icon">❌</span> Buying random AI tools without process diagnosis creates confusion, not profit.</li>
+          <li><span class="icon">❌</span> Business owners can't see which processes are actually safe to automate first.</li>
+        </ul>
+      </div>
+
+      <!-- Card 2: What You Get in 15 Mins -->
+      <div class="info-card success">
+        <div class="card-header-badge success-text">
+          <span class="card-icon-lg">🎯</span> Your Free 15-Minute Audit Output
+        </div>
+        <ul class="bullet-list" id="solution-list">
+          <li><span class="icon">✅</span> <strong>Cash Leakage Scorecard:</strong> Calculate your exact annual time & money drain.</li>
+          <li><span class="icon">✅</span> <strong>Top 3 Quick Wins:</strong> Pinpoint high-impact, low-effort automation targets.</li>
+          <li><span class="icon">✅</span> <strong>Prep Roadmap:</strong> Clear next steps to streamline operations safely.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- QUADRANT LAYOUT (2x2 Grid): How The 15-Minute Free AI Audit Works -->
+    <div class="mini-playbook-section">
+      <div class="playbook-header">
+        <h2 class="playbook-title">How The Free 15-Minute Mini AI Audit Works</h2>
+        <p class="playbook-subtitle">A structured, high-value diagnostic designed for busy SME founders & directors.</p>
+      </div>
+      
+      <div class="quadrant-grid">
+        
+        <!-- Quadrant 1 (Top-Left) -->
+        <div class="quadrant-card">
+          <div class="step-num-lg">1</div>
+          <div class="quadrant-content">
+            <div class="step-name">Discovery Questions</div>
+            <div class="step-desc">5 targeted questions to isolate operational friction & bottleneck time sinks.</div>
+          </div>
+        </div>
+
+        <!-- Quadrant 2 (Top-Right) -->
+        <div class="quadrant-card">
+          <div class="step-num-lg">2</div>
+          <div class="quadrant-content">
+            <div class="step-name">Workflow Mapping</div>
+            <div class="step-desc">Scan daily processes against our high-resolution AI Opportunity Matrix.</div>
+          </div>
+        </div>
+
+        <!-- Quadrant 3 (Bottom-Left) -->
+        <div class="quadrant-card">
+          <div class="step-num-lg">3</div>
+          <div class="quadrant-content">
+            <div class="step-name">ROI Calculation</div>
+            <div class="step-desc">Compute exact annual cash leakage & projected automation financial savings.</div>
+          </div>
+        </div>
+
+        <!-- Quadrant 4 (Bottom-Right) -->
+        <div class="quadrant-card">
+          <div class="step-num-lg">4</div>
+          <div class="quadrant-content">
+            <div class="step-name">Action Blueprint</div>
+            <div class="step-desc">Get your top 3 immediate quick-win automation recommendations.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Key Offer Metrics Banner -->
+    <div class="roi-banner">
+      <div class="roi-stat-item">
+        <div class="stat-val" id="stat-1">15 Minutes</div>
+        <div class="stat-lbl">Fast & Zero-Risk Session</div>
+      </div>
+      <div class="roi-stat-item">
+        <div class="stat-val" id="stat-2">3 Quick Wins</div>
+        <div class="stat-lbl">Actionable Automation Targets</div>
+      </div>
+      <div class="roi-stat-item">
+        <div class="stat-val" id="stat-3">100% Free</div>
+        <div class="stat-lbl">No Software Push or Obligation</div>
+      </div>
+    </div>
+
+    <!-- HIGH-VISIBILITY CALL TO ACTION BLOCK AT BOTTOM OF PAGE 1 -->
+    <div class="flyer-footer">
+      <div class="cta-text">
+        <h3>Claim Your Free 15-Minute Mini AI Audit</h3>
+        <p>Reserve a quick diagnostic slot for your team. Limited monthly availability.</p>
+      </div>
+
+      <div class="contact-details">
+        <a href="https://consulting.madlabz.uk" target="_blank" class="contact-link">👉 Book Now: consulting.madlabz.uk</a>
+        <div class="qr-mockup">
+          <img src="qr_code.png" alt="Scan QR Code to Book" class="qr-img">
+          <div class="qr-subtext">
+            <strong>Scan QR Code</strong><br>To Book: consulting.madlabz.uk
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const sectors = {
+      'all': {
+        headline: 'Discover Where Your Business Is <span class="gradient-text">Leaking Cash</span> in Just 15 Minutes.',
+        subhead: 'In a free 15-minute diagnostic session, we identify your top 3 operational bottleneck tasks and calculate your exact annual cash leakage—no sales pitch, no tech jargon, zero obligation.',
+        problems: [
+          'Staff waste 10–15 hours/week copying data, chasing files & typing reports.',
+          'Buying random AI tools without process diagnosis creates confusion, not profit.',
+          'Business owners can\'t see which processes are actually safe to automate first.'
+        ],
+        solutions: [
+          '<strong>Cash Leakage Scorecard:</strong> Calculate your exact annual time & money drain.',
+          '<strong>Top 3 Quick Wins:</strong> Pinpoint high-impact, low-effort automation targets.',
+          '<strong>Prep Roadmap:</strong> Clear next steps to streamline operations safely.'
+        ]
+      },
+      'prof-services': {
+        headline: 'Uncover Hidden Admin Leakage in Your <span class="gradient-text">Accounting & Legal Firm</span> (15 Mins)',
+        subhead: 'In just 15 minutes, we pinpoint document review time-sinks, client intake friction, and invoice reconciliation bottlenecks holding back your billable hours.',
+        problems: [
+          'Fee-earners spending billable hours on repetitive client data entry & document checks.',
+          'Document processing delays slowing down onboarding and client compliance.',
+          'Unsure which AI tools comply with data privacy & client confidentiality standards.'
+        ],
+        solutions: [
+          '<strong>15-Min Intake Audit:</strong> Identify document & intake bottlenecks draining hours.',
+          '<strong>Compliance-First AI Targets:</strong> Safe, private document automation recommendations.',
+          '<strong>Billable Time Recovery:</strong> Quantify potential hours returned to fee-earning tasks.'
+        ]
+      },
+      'agencies': {
+        headline: 'Pinpoint Operational Bottlenecks in Your <span class="gradient-text">Digital Agency</span> in 15 Mins',
+        subhead: 'Find out how many hours your account managers & creatives lose each week to manual reporting, lead follow-ups, and repetitive campaign tasks.',
+        problems: [
+          'Account teams spending 20+ hours a month manually building client reports.',
+          'Inbound lead response delayed outside 9-to-5 operating hours.',
+          'Creative teams bottlenecked by repetitive asset adjustments.'
+        ],
+        solutions: [
+          '<strong>Agency Friction Diagnostic:</strong> Identify reporting & client onboarding bottlenecks.',
+          '<strong>Lead Recovery Calculator:</strong> Measure revenue lost to slow initial response times.',
+          '<strong>Creative Automation Targets:</strong> 3 quick wins to free up your creative talent.'
+        ]
+      },
+      'realestate': {
+        headline: 'Find Where Your <span class="gradient-text">Real Estate & Property</span> Firm is Losing Leads (15 Mins)',
+        subhead: 'In a 15-minute mini assessment, discover how to capture after-hours buyer inquiries and automate tenant maintenance triage automatically.',
+        problems: [
+          'After-hours buyer and tenant leads falling through the cracks.',
+          'Property managers overwhelmed by manual maintenance request tracking.',
+          'Slow lease summary creation and seller updates.'
+        ],
+        solutions: [
+          '<strong>Inquiry Friction Audit:</strong> Pinpoint missed lead touchpoints across listings.',
+          '<strong>Automated Triage Scorecard:</strong> Evaluate 24/7 AI response impact on occupancy.',
+          '<strong>Listing Automation Target:</strong> Quick wins for instant listing & lease drafting.'
+        ]
+      },
+      'trades': {
+        headline: 'Discover How to Quote Jobs Faster in Your <span class="gradient-text">Trade & Construction Firm</span>',
+        subhead: '15-minute diagnostic to show how field crews & job estimators can slash admin paperwork, speed up quotes, and get paid faster.',
+        problems: [
+          'Losing lucrative contracts because preparing detailed job quotes takes 3+ days.',
+          'Field staff bogged down by manual paper forms and time tracking.',
+          'Invoices delayed after job completion causing cashflow lag.'
+        ],
+        solutions: [
+          '<strong>Quote Speed Diagnostic:</strong> Pinpoint delays between site visits & quote delivery.',
+          '<strong>Field-to-Office Scorecard:</strong> Calculate time lost to manual data entry.',
+          '<strong>Rapid Invoicing Roadmap:</strong> Quick wins to sync field notes straight to accounting.'
+        ]
+      }
+    };
+
+    function switchSector(key) {
+      document.querySelectorAll('.sector-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const data = sectors[key];
+      document.getElementById('main-headline').innerHTML = data.headline;
+      document.getElementById('main-subhead').innerHTML = data.subhead;
+
+      const probList = document.getElementById('problem-list');
+      probList.innerHTML = data.problems.map(p => `<li><span class="icon">❌</span> ${p}</li>`).join('');
+
+      const solList = document.getElementById('solution-list');
+      solList.innerHTML = data.solutions.map(s => `<li><span class="icon">✅</span> ${s}</li>`).join('');
+    }
+  </script>
+</body>
+</html>

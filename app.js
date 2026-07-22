@@ -90,24 +90,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const companySizeSelect = document.getElementById('client-size');
   const auditPackageSelect = document.getElementById('client-package');
 
-  if (companySizeSelect && auditPackageSelect) {
-    companySizeSelect.addEventListener('change', () => {
-      const selectedSize = companySizeSelect.value;
-      if (selectedSize === 'smb') {
-        auditPackageSelect.value = 'smb-audit';
-      } else if (selectedSize === 'enterprise') {
-        auditPackageSelect.value = 'ent-audit';
-      }
-    });
+  const submitBookingBtn = document.getElementById('submit-booking-btn');
 
-    auditPackageSelect.addEventListener('change', () => {
-      const selectedPackage = auditPackageSelect.value;
-      if (selectedPackage === 'smb-audit') {
-        companySizeSelect.value = 'smb';
-      } else if (selectedPackage === 'ent-audit') {
-        companySizeSelect.value = 'enterprise';
-      }
-    });
+  function updateBookingBtnText() {
+    if (!submitBookingBtn || !auditPackageSelect) return;
+    if (auditPackageSelect.value === 'mini-audit') {
+      submitBookingBtn.textContent = 'Claim Your Free 15-Min AI Audit';
+      submitBookingBtn.style.background = 'var(--accent-gradient)';
+    } else if (auditPackageSelect.value === 'smb-audit') {
+      submitBookingBtn.textContent = 'Submit SMB Audit Request';
+      submitBookingBtn.style.background = 'var(--accent-gradient)';
+    } else {
+      submitBookingBtn.textContent = 'Submit Enterprise Audit Request';
+      submitBookingBtn.style.background = 'var(--accent-gradient)';
+    }
+  }
+
+  window.selectPackage = function(pkgValue) {
+    if (auditPackageSelect) {
+      auditPackageSelect.value = pkgValue;
+      updateBookingBtnText();
+    }
+  };
+
+  if (auditPackageSelect) {
+    auditPackageSelect.addEventListener('change', updateBookingBtnText);
+    updateBookingBtnText();
   }
 
   // --- 3. Form Submission Integration ---
@@ -240,4 +248,166 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // --- 6. AI Services Resource Library Renderer ---
+  const resourceGrid = document.getElementById('resource-grid-container');
+  const searchInput = document.getElementById('resource-search-input');
+  const filterBtns = document.querySelectorAll('.res-filter-btn');
+
+  let allResources = [
+    {
+      "id": "mini-assessment-playbook",
+      "category": "Assessment & Lead Gen",
+      "title": "1. The Mini AI Assessment Playbook",
+      "description": "A step-by-step playbook for running a free 15-minute mini assessment. Includes discovery questions, meeting templates, research workflow, and prep checklists.",
+      "link": "https://app.notion.com/p/3754fd47b96f81359856c42ab166a60a",
+      "tags": ["Discovery", "Meeting Templates", "Workflow"],
+      "actionLabel": "Open Playbook"
+    },
+    {
+      "id": "assessment-report-template",
+      "category": "Templates & Deliverables",
+      "title": "2. AI Tools Assessment Report Template",
+      "description": "The blank six-part report template used to package paid AI assessments. Presents pain points, recommended tools, quick wins, and financial impact.",
+      "usageInstruction": "Prompt: 'Import a clean copy of the Assessment template attached' into Claude Design.",
+      "link": "https://drive.google.com/file/d/1FQGaxgVTHL22K7lKsiYjTFzvPqmWCE0j/view?usp=sharing",
+      "tags": ["HTML Deliverable", "Claude Design", "Financial Impact"],
+      "actionLabel": "Download Template"
+    },
+    {
+      "id": "ai-concierge-playbook",
+      "category": "Concierge & Retainers",
+      "title": "3. The AI Concierge Playbook",
+      "description": "Detailed blueprint for structuring and fulfilling the recurring AI Concierge offer. Covers onboarding, working sessions, and the Audit–Optimize–Automate process.",
+      "link": "https://app.notion.com/p/38a4fd47b96f81979240d297a1e72ea2",
+      "tags": ["Onboarding", "Audit-Optimize-Automate", "Retainer SLA"],
+      "actionLabel": "Open Concierge Blueprint"
+    },
+    {
+      "id": "sales-objections-guide",
+      "category": "Sales & Objections",
+      "title": "4. 8 Objections Every AI Prospect Raises",
+      "description": "Eight word-for-word responses to common objections when selling AI services, including price, timing, and DIY assumptions.",
+      "link": "https://app.notion.com/p/3754fd47b96f81749cf3f33d92c0d2d5",
+      "tags": ["Sales Scripts", "Word-for-Word", "Closing"],
+      "actionLabel": "View Objection Scripts"
+    },
+    {
+      "id": "ai-operator-academy",
+      "category": "Operating System & Training",
+      "title": "5. AI Operator Academy (Full Business in a Box)",
+      "description": "The complete AI Assessment and AI Concierge operating system including Claude skills, templates, client hub, and onboarding plugin.",
+      "link": "https://aoa.community/video",
+      "tags": ["Full OS", "Claude Skills", "Client Hub"],
+      "actionLabel": "Explore Operating System"
+    },
+    {
+      "id": "ai-services-course-video",
+      "category": "Video Training",
+      "title": "6. AI Services Business Full Course",
+      "description": "Complete video breakdown walking through how to structure, sell, and execute AI assessments and concierge services for SMEs.",
+      "link": "https://youtu.be/GP7ki1RdzJ4",
+      "tags": ["Video Course", "Strategy", "Execution"],
+      "actionLabel": "Watch Video Course"
+    }
+  ];
+
+  function renderResources(items) {
+    if (!resourceGrid) return;
+    
+    if (items.length === 0) {
+      resourceGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--bg-card); border-radius: 16px; border: 1px solid var(--glass-border);">
+          <p style="color: var(--text-muted); font-size: 1.1rem;">No resources found matching your filter.</p>
+        </div>
+      `;
+      return;
+    }
+
+    resourceGrid.innerHTML = items.map(item => `
+      <div class="card reveal active" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+            ${item.category}
+          </div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 0.8rem; color: #fff;">${item.title}</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+            ${item.description}
+          </p>
+          ${item.usageInstruction ? `
+            <div style="font-size: 0.8rem; background: rgba(133, 51, 255, 0.1); border-left: 3px solid var(--accent-purple); padding: 0.5rem 0.8rem; border-radius: 4px; margin-bottom: 1rem; color: var(--text-main);">
+              💡 <strong>Tip:</strong> ${item.usageInstruction}
+            </div>
+          ` : ''}
+          <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem;">
+            ${item.tags ? item.tags.map(tag => `<span style="font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 50px; background: rgba(255,255,255,0.05); color: var(--text-dim); border: 1px solid var(--glass-border);">${tag}</span>`).join('') : ''}
+          </div>
+        </div>
+        <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size: 0.85rem; width: 100%; text-align: center; justify-content: center;">
+          ${item.actionLabel || 'Access Resource'} ↗
+        </a>
+      </div>
+    `).join('');
+  }
+
+  // Attempt to fetch fresh db from backend or API
+  fetch('./resources_db.json')
+    .then(r => r.json())
+    .then(data => {
+      if (data && data.resources) {
+        allResources = data.resources;
+        renderResources(allResources);
+      }
+    })
+    .catch(() => {
+      // Use fallback
+      renderResources(allResources);
+    });
+
+  // Category Filtering
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'rgba(255, 255, 255, 0.04)';
+        b.style.borderColor = 'var(--glass-border)';
+        b.style.color = 'var(--text-muted)';
+      });
+      btn.classList.add('active');
+      btn.style.background = 'rgba(133, 51, 255, 0.2)';
+      btn.style.borderColor = 'var(--accent-purple)';
+      btn.style.color = '#fff';
+
+      const cat = btn.getAttribute('data-category');
+      if (cat === 'all') {
+        renderResources(allResources);
+      } else {
+        const filtered = allResources.filter(r => 
+          r.category.toLowerCase().includes(cat) || r.id.toLowerCase().includes(cat)
+        );
+        renderResources(filtered);
+      }
+    });
+  });
+
+  // Search Input Filtering
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) {
+        renderResources(allResources);
+        return;
+      }
+      const filtered = allResources.filter(r => 
+        r.title.toLowerCase().includes(q) ||
+        r.description.toLowerCase().includes(q) ||
+        (r.tags && r.tags.some(t => t.toLowerCase().includes(q)))
+      );
+      renderResources(filtered);
+    });
+  }
+
+  // Initial render call
+  renderResources(allResources);
 });
+
