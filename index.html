@@ -380,6 +380,55 @@
     </div>
   </footer>
 
+  <!-- Floating Chatbot Widget (Maddie) -->
+  <div id="maddie-chatbot-container">
+    <!-- Chat Icon Trigger -->
+    <button id="maddie-chat-trigger" title="Chat with Maddie">
+      <span class="maddie-notification-dot"></span>
+      <svg class="maddie-chat-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </button>
+
+    <!-- Chat Window Panel -->
+    <div id="maddie-chat-window" class="maddie-hidden">
+      <!-- Header -->
+      <div class="maddie-chat-header">
+        <div class="maddie-avatar-container">
+          <div class="maddie-avatar-status"></div>
+          <div class="maddie-avatar-initials">M</div>
+        </div>
+        <div class="maddie-header-info">
+          <h3>Maddie</h3>
+          <p>Operations AI Assistant</p>
+        </div>
+        <button id="maddie-chat-close">&times;</button>
+      </div>
+
+      <!-- Messages Area -->
+      <div id="maddie-chat-messages"></div>
+
+      <!-- Quick Suggestion Chips -->
+      <div id="maddie-suggestion-chips">
+        <button class="maddie-chip" data-intent="audit">🔍 How does the audit work?</button>
+        <button class="maddie-chip" data-intent="systems">🛠️ What systems do you build?</button>
+        <button class="maddie-chip" data-intent="roi">💸 Calculate my ROI</button>
+        <button class="maddie-chip" data-intent="book">📅 Book Free Assessment</button>
+      </div>
+
+      <!-- Chat Input Area -->
+      <div class="maddie-chat-input-container">
+        <input type="text" id="maddie-chat-input" placeholder="Type a message..." autocomplete="off">
+        <button id="maddie-chat-send">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="app.js?v=3"></script>
 </body>
 </html>

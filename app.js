@@ -409,5 +409,152 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial render call
   renderResources(allResources);
+
+  // --- Maddie Chatbot Controller ---
+  const chatTrigger = document.getElementById('maddie-chat-trigger');
+  const chatWindow = document.getElementById('maddie-chat-window');
+  const chatClose = document.getElementById('maddie-chat-close');
+  const chatMessages = document.getElementById('maddie-chat-messages');
+  const chatInput = document.getElementById('maddie-chat-input');
+  const chatSend = document.getElementById('maddie-chat-send');
+  const suggestionChipsContainer = document.getElementById('maddie-suggestion-chips');
+
+  const calendarLink = "https://calendar.app.google/L7eKNEGMkrrsW2Ti7";
+
+  let botGreetingSent = false;
+
+  function addBotMessage(text, isHTML = false) {
+    const bubble = document.createElement('div');
+    bubble.classList.add('maddie-message', 'bot');
+    if (isHTML) {
+      bubble.innerHTML = text;
+    } else {
+      bubble.textContent = text;
+    }
+    chatMessages.appendChild(bubble);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function addUserMessage(text) {
+    const bubble = document.createElement('div');
+    bubble.classList.add('maddie-message', 'user');
+    bubble.textContent = text;
+    chatMessages.appendChild(bubble);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function showTypingIndicator() {
+    const indicator = document.createElement('div');
+    indicator.classList.add('maddie-typing-indicator');
+    indicator.id = 'maddie-typing-temp';
+    indicator.innerHTML = '<span></span><span></span><span></span>';
+    chatMessages.appendChild(indicator);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function hideTypingIndicator() {
+    const temp = document.getElementById('maddie-typing-temp');
+    if (temp) temp.remove();
+  }
+
+  function toggleChat() {
+    chatWindow.classList.toggle('maddie-hidden');
+    
+    // Send bot greeting on first open
+    if (!botGreetingSent && !chatWindow.classList.contains('maddie-hidden')) {
+      botGreetingSent = true;
+      showTypingIndicator();
+      setTimeout(() => {
+        hideTypingIndicator();
+        addBotMessage("Hi there! I'm Maddie, your AI operations assistant. 👋");
+        showTypingIndicator();
+        setTimeout(() => {
+          hideTypingIndicator();
+          addBotMessage("I help businesses identify operational bottlenecks and deploy custom automations (using platforms like n8n or LLMs).\n\nHow can I help you today? You can select a quick option below, or type a question!");
+        }, 1000);
+      }, 800);
+    }
+  }
+
+  if (chatTrigger && chatWindow && chatClose) {
+    chatTrigger.addEventListener('click', toggleChat);
+    chatClose.addEventListener('click', toggleChat);
+  }
+
+  // Predefined intents and responses
+  const botIntents = {
+    greeting: "Hi there! I'm Maddie. Ask me anything about MADLABZ AI Consulting, our readiness audits, or schedule a free assessment slot below!",
+    audit: "Our AI Readiness Audit takes 2 weeks. We conduct interviews with your staff to map your workflows, identify processes draining employee hours, and co-create an Opportunity Canvas. The final roadmap outlines exactly what custom integrations to build, their costs, and your Year 1 projected ROI. Would you like to book a free assessment call to check your team's readiness?",
+    systems: "We build custom pipelines using tools like n8n for integrations, custom LLM agents for cognitive tasks, and Vapi for automated voice interfaces. All solutions are backed by active MSP maintenance to prevent any API breakages. Let's schedule a free assessment to see what systems match your bottlenecks!",
+    roi: "We calculate operational leakages based on employee headcount, wasted administrative hours, and average pay rates. By automating processes, we aim to cut back-office hours by up to 40%. Would you like to book a free call to run the math on your specific business?",
+    book: `Perfect! I've loaded my booking calendar directly below. Please pick a convenient slot for your Free AI Readiness Assessment call:<br><br><iframe src="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" class="maddie-calendar-embed" frameborder="0"></iframe><br><i>Having trouble viewing the calendar? <a href="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" target="_blank" style="color: var(--accent-cyan); text-decoration: underline; font-weight: 500;">Click here to open it directly</a>.</i>`
+  };
+
+  function handleBotResponse(text) {
+    showTypingIndicator();
+    const query = text.toLowerCase().trim();
+    
+    setTimeout(() => {
+      hideTypingIndicator();
+      
+      if (query.includes('book') || query.includes('calendar') || query.includes('schedule') || query.includes('assess') || query.includes('call') || query.includes('appoint') || query.includes('meet')) {
+        addBotMessage(botIntents.book, true);
+      } else if (query.includes('audit') || query.includes('diagnos') || query.includes('process') || query.includes('canvas')) {
+        addBotMessage(botIntents.audit);
+      } else if (query.includes('system') || query.includes('n8n') || query.includes('tool') || query.includes('software') || query.includes('vapi')) {
+        addBotMessage(botIntents.systems);
+      } else if (query.includes('roi') || query.includes('sav') || query.includes('leak') || query.includes('rate') || query.includes('cost') || query.includes('price')) {
+        addBotMessage(botIntents.roi);
+      } else if (query.includes('hello') || query.includes('hi') || query.includes('hey') || query.includes('maddie')) {
+        addBotMessage(botIntents.greeting);
+      } else {
+        addBotMessage(`That's a great question! We go deep into that during our Free 15-Minute AI Readiness Assessment. Let's get you booked in for a chat:<br><br><iframe src="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" class="maddie-calendar-embed" frameborder="0"></iframe><br><i>Having trouble? <a href="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" target="_blank" style="color: var(--accent-cyan); text-decoration: underline; font-weight: 500;">Open calendar in a new tab</a>.</i>`, true);
+      }
+    }, 1000);
+  }
+
+  // Suggestion Chips Click Handler
+  if (suggestionChipsContainer) {
+    suggestionChipsContainer.addEventListener('click', (e) => {
+      const chip = e.target.closest('.maddie-chip');
+      if (!chip) return;
+      
+      const intent = chip.getAttribute('data-intent');
+      const userText = chip.textContent;
+      
+      addUserMessage(userText);
+      
+      showTypingIndicator();
+      setTimeout(() => {
+        hideTypingIndicator();
+        if (intent && botIntents[intent]) {
+          const isHTML = intent === 'book';
+          addBotMessage(botIntents[intent], isHTML);
+        } else {
+          handleBotResponse(userText);
+        }
+      }, 800);
+    });
+  }
+
+  // Input Send Message
+  function handleSendMessage() {
+    const text = chatInput.value.trim();
+    if (!text) return;
+    
+    addUserMessage(text);
+    chatInput.value = '';
+    
+    handleBotResponse(text);
+  }
+
+  if (chatSend && chatInput) {
+    chatSend.addEventListener('click', handleSendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        handleSendMessage();
+      }
+    });
+  }
 });
 
