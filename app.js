@@ -419,7 +419,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatSend = document.getElementById('maddie-chat-send');
   const suggestionChipsContainer = document.getElementById('maddie-suggestion-chips');
 
-  const calendarLink = "https://calendar.app.google/L7eKNEGMkrrsW2Ti7";
+  const calendarLink = "https://calendar.google.com/calendar/appointments/schedules/AcZssZ3D1no9FIuhw1WHNMDKSxCSKsRbX94HT5D1Zhs-MPEsczy8wvlp1bShM5BeadGcf1ZK2iccTwG8?gv=true";
+  const calendarShortLink = "https://calendar.app.google/L7eKNEGMkrrsW2Ti7";
 
   let botGreetingSent = false;
 
@@ -466,11 +467,11 @@ document.addEventListener('DOMContentLoaded', () => {
       showTypingIndicator();
       setTimeout(() => {
         hideTypingIndicator();
-        addBotMessage("Hi there! I'm Maddie, your AI operations assistant. 👋");
+        addBotMessage("Hi there! I'm Maddie, your operations assistant. 👋");
         showTypingIndicator();
         setTimeout(() => {
           hideTypingIndicator();
-          addBotMessage("I help businesses identify operational bottlenecks and deploy custom automations (using platforms like n8n or LLMs).\n\nHow can I help you today? You can select a quick option below, or type a question!");
+          addBotMessage("I'm here to help you find simple ways to save time and automate repetitive admin tasks. You can ask me how our audits work, or click below to schedule a free 15-minute chat where we'll show you exactly how to free up your team's hours!");
         }, 1000);
       }, 800);
     }
@@ -487,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audit: "Our AI Readiness Audit takes 2 weeks. We conduct interviews with your staff to map your workflows, identify processes draining employee hours, and co-create an Opportunity Canvas. The final roadmap outlines exactly what custom integrations to build, their costs, and your Year 1 projected ROI. Would you like to book a free assessment call to check your team's readiness?",
     systems: "We build custom pipelines using tools like n8n for integrations, custom LLM agents for cognitive tasks, and Vapi for automated voice interfaces. All solutions are backed by active MSP maintenance to prevent any API breakages. Let's schedule a free assessment to see what systems match your bottlenecks!",
     roi: "We calculate operational leakages based on employee headcount, wasted administrative hours, and average pay rates. By automating processes, we aim to cut back-office hours by up to 40%. Would you like to book a free call to run the math on your specific business?",
-    book: `Perfect! I've loaded my booking calendar directly below. Please pick a convenient slot for your Free AI Readiness Assessment call:<br><br><iframe src="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" class="maddie-calendar-embed" frameborder="0"></iframe><br><i>Having trouble viewing the calendar? <a href="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" target="_blank" style="color: var(--accent-cyan); text-decoration: underline; font-weight: 500;">Click here to open it directly</a>.</i>`
+    book: `Perfect! I've loaded my booking calendar directly below. Please pick a convenient slot for your Free AI Readiness Assessment call:<br><br><iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3D1no9FIuhw1WHNMDKSxCSKsRbX94HT5D1Zhs-MPEsczy8wvlp1bShM5BeadGcf1ZK2iccTwG8?gv=true" class="maddie-calendar-embed" frameborder="0"></iframe><br><i>Having trouble viewing the calendar? <a href="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" target="_blank" style="color: var(--accent-cyan); text-decoration: underline; font-weight: 500;">Click here to open it directly</a>.</i>`
   };
 
   function handleBotResponse(text) {
@@ -508,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (query.includes('hello') || query.includes('hi') || query.includes('hey') || query.includes('maddie')) {
         addBotMessage(botIntents.greeting);
       } else {
-        addBotMessage(`That's a great question! We go deep into that during our Free 15-Minute AI Readiness Assessment. Let's get you booked in for a chat:<br><br><iframe src="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" class="maddie-calendar-embed" frameborder="0"></iframe><br><i>Having trouble? <a href="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" target="_blank" style="color: var(--accent-cyan); text-decoration: underline; font-weight: 500;">Open calendar in a new tab</a>.</i>`, true);
+        addBotMessage(`That's a great question! We go deep into that during our Free 15-Minute AI Readiness Assessment. Let's get you booked in for a chat:<br><br><iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3D1no9FIuhw1WHNMDKSxCSKsRbX94HT5D1Zhs-MPEsczy8wvlp1bShM5BeadGcf1ZK2iccTwG8?gv=true" class="maddie-calendar-embed" frameborder="0"></iframe><br><i>Having trouble? <a href="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" target="_blank" style="color: var(--accent-cyan); text-decoration: underline; font-weight: 500;">Open calendar in a new tab</a>.</i>`, true);
       }
     }, 1000);
   }
