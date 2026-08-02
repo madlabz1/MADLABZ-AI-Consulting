@@ -831,7 +831,7 @@ footer {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: var(--accent-gradient);
+  background: #000000;
   border: 2px solid var(--accent-cyan);
   color: var(--bg-dark);
   cursor: pointer;
@@ -909,7 +909,7 @@ footer {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: var(--blue-purple-gradient);
+  background: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
