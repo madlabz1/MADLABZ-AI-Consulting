@@ -832,7 +832,7 @@ footer {
   height: 60px;
   border-radius: 50%;
   background: var(--accent-gradient);
-  border: none;
+  border: 2px solid var(--accent-cyan);
   color: var(--bg-dark);
   cursor: pointer;
   box-shadow: 0 10px 30px rgba(133, 51, 255, 0.4), var(--shadow-glow);
@@ -841,6 +841,16 @@ footer {
   justify-content: center;
   position: relative;
   transition: var(--transition-smooth);
+  overflow: hidden;
+  padding: 0;
+}
+
+.maddie-trigger-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
 }
 
 #maddie-chat-trigger:hover {
