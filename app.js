@@ -782,15 +782,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const payload = {
         _subject: "Madlabz AI Assessment Lead Capture",
-        "Lead Name": name,
-        "Email Address": email,
-        "WhatsApp / Phone": whatsapp,
-        "Delivery Preference": delivery,
-        "Prescribed AI Tool": wizardData.prescribedTool,
-        "Business Type": wizardData.industry,
-        "Company Size": wizardData.size,
-        "Turnover Range": wizardData.turnover,
-        "Weekly Friction Hours": wizardData.q1
+        name: name,
+        email: email,
+        whatsapp: whatsapp,
+        delivery: delivery,
+        tool: wizardData.prescribedTool,
+        industry: wizardData.industry,
+        size: wizardData.size,
+        turnover: wizardData.turnover,
+        wastedHours: wizardData.q1,
+        _cc: email
       };
 
       fetch('https://formsubmit.co/ajax/madlabzuk.a@gmail.com', {
@@ -946,13 +947,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dispatch final notification details via Formsubmit
     const payload = {
       _subject: "Madlabz AI Setup Appointment Booked",
-      "Lead Name": wizardData.name,
-      "Email Address": wizardData.email,
-      "WhatsApp": wizardData.phone,
-      "Prescribed AI Tool": wizardData.prescribedTool,
-      "Appointment Date": formattedDate,
-      "Appointment Time": selectedTime,
-      "Next Action Required": "Full AI Operations Audit"
+      name: wizardData.name,
+      email: wizardData.email,
+      whatsapp: wizardData.phone,
+      tool: wizardData.prescribedTool,
+      appointmentDate: formattedDate,
+      appointmentTime: selectedTime,
+      nextAction: "Full AI Operations Audit",
+      _cc: wizardData.email
     };
 
     fetch('https://formsubmit.co/ajax/madlabzuk.a@gmail.com', {
