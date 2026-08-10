@@ -471,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showTypingIndicator();
         setTimeout(() => {
           hideTypingIndicator();
-          addBotMessage("I'm here to help you find simple ways to save time and automate repetitive admin tasks. You can ask me how our audits work, or click below to schedule a free 15-minute chat where we'll show you exactly how to free up your team's hours!");
+          addBotMessage("I'm here to help you find simple ways to save time and automate repetitive admin tasks. You can ask me how our audits work, or start our **Free AI Assessment online** right now. It takes just 2 minutes to diagnose your bottlenecks and get a custom recommendation blueprint!");
         }, 1000);
       }, 800);
     }
@@ -484,11 +484,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Predefined intents and responses
   const botIntents = {
-    greeting: "Hi there! I'm Maddie. Ask me anything about MADLABZ AI Consulting, our readiness audits, or schedule a free assessment slot below!",
-    audit: "Our AI Readiness Audit takes 2 weeks. We conduct interviews with your staff to map your workflows, identify processes draining employee hours, and co-create an Opportunity Canvas. The final roadmap outlines exactly what custom integrations to build, their costs, and your Year 1 projected ROI. Would you like to book a free assessment call to check your team's readiness?",
-    systems: "We build custom pipelines using tools like n8n for integrations, custom LLM agents for cognitive tasks, and Vapi for automated voice interfaces. All solutions are backed by active MSP maintenance to prevent any API breakages. Let's schedule a free assessment to see what systems match your bottlenecks!",
-    roi: "We calculate operational leakages based on employee headcount, wasted administrative hours, and average pay rates. By automating processes, we aim to cut back-office hours by up to 40%. Would you like to book a free call to run the math on your specific business?",
-    book: `Perfect! I've loaded my booking calendar directly below. Please pick a convenient slot for your Free AI Readiness Assessment call:<br><br><iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3D1no9FIuhw1WHNMDKSxCSKsRbX94HT5D1Zhs-MPEsczy8wvlp1bShM5BeadGcf1ZK2iccTwG8?gv=true" class="maddie-calendar-embed" frameborder="0"></iframe><br><i>Having trouble viewing the calendar? <a href="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" target="_blank" style="color: var(--accent-cyan); text-decoration: underline; font-weight: 500;">Click here to open it directly</a>.</i>`
+    greeting: "Hi there! I'm Maddie. Ask me anything about MADLABZ AI Consulting, our readiness audits, or start our free online AI assessment to find your bottlenecks!",
+    audit: "Our AI Readiness Audit takes 2 weeks. We interview your staff to map workflows, identify processes draining hours, and co-create an Opportunity Canvas. The first step is to take our <strong>Free Online AI Assessment</strong> so we can analyze your primary bottlenecks. Would you like to start the online assessment now?",
+    systems: "We build custom pipelines using n8n for integrations, custom LLM agents, and Vapi for voice. All integrations are fully managed with active SLA monitoring. We suggest taking our <strong>Free Online AI Assessment</strong> first to identify the exact AI tool that matches your friction. Shall we start?",
+    roi: "We calculate cash leakages based on your staff headcount, wasted hours, and pay rates. Automating repetitive admin can save up to 40% of operations. You can run the math directly by taking our <strong>Free Online AI Assessment</strong>. Would you like to proceed?",
+    book: `Great! You can take our interactive AI Assessment directly on the website. It takes just 2 minutes to diagnose your biggest operational bottlenecks and match you with a custom blueprint:<br><br><button class="btn btn-primary" onclick="startAssessment(); toggleChat();" style="width: 100%; font-size: 0.9rem; padding: 0.8rem 1rem;">📝 Start Free Online Assessment</button>`
   };
 
   function handleBotResponse(text) {
@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (query.includes('hello') || query.includes('hi') || query.includes('hey') || query.includes('maddie')) {
         addBotMessage(botIntents.greeting);
       } else {
-        addBotMessage(`That's a great question! We go deep into that during our Free 15-Minute AI Readiness Assessment. Let's get you booked in for a chat:<br><br><iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3D1no9FIuhw1WHNMDKSxCSKsRbX94HT5D1Zhs-MPEsczy8wvlp1bShM5BeadGcf1ZK2iccTwG8?gv=true" class="maddie-calendar-embed" frameborder="0"></iframe><br><i>Having trouble? <a href="https://calendar.app.google/L7eKNEGMkrrsW2Ti7" target="_blank" style="color: var(--accent-cyan); text-decoration: underline; font-weight: 500;">Open calendar in a new tab</a>.</i>`, true);
+        addBotMessage(`That's a great question! We go deep into this during our Free Online AI Assessment. It takes just 2 minutes to diagnose your business bottlenecks and match you with a custom blueprint:<br><br><button class="btn btn-primary" onclick="startAssessment(); toggleChat();" style="width: 100%; font-size: 0.9rem; padding: 0.8rem 1rem;">📝 Start Free Online Assessment</button>`, true);
       }
     }, 1000);
   }
