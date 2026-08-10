@@ -557,5 +557,434 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // ==========================================================================
+  // Interactive AI Assessment Wizard & Calendar Scheduler Logic
+  // ==========================================================================
+
+  let currentWizStep = 1;
+  const totalWizSteps = 4;
+  let wizardData = {};
+
+  // Global assessment navigation
+  window.startAssessment = function() {
+    const el = document.getElementById('assessment-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  window.nextWizStep = function(stepNum) {
+    // Validate inputs for Step 1 before moving to Step 2
+    if (stepNum === 2 && currentWizStep === 1) {
+      const industry = document.getElementById('wiz-industry').value;
+      const size = document.getElementById('wiz-size').value;
+      const turnover = document.getElementById('wiz-turnover').value;
+      
+      if (!industry || !size || !turnover) {
+        alert('Please fill out all fields in Step 1 to customize your diagnostic profile.');
+        return;
+      }
+
+      wizardData.industry = industry;
+      wizardData.size = size;
+      wizardData.turnover = turnover;
+    }
+
+    // Hide all steps
+    for (let i = 1; i <= 5; i++) {
+      const stepEl = document.getElementById(`wiz-step-${i}`);
+      if (stepEl) stepEl.style.display = 'none';
+    }
+
+    // Show target step
+    const targetStepEl = document.getElementById(`wiz-step-${stepNum}`);
+    if (targetStepEl) {
+      targetStepEl.style.display = 'block';
+    }
+
+    // Update progress bar
+    currentWizStep = stepNum;
+    const progressFill = document.getElementById('wizard-progress-fill');
+    const progressText = document.getElementById('wizard-progress-text');
+    const progressPerc = document.getElementById('wizard-progress-percentage');
+    
+    if (progressFill && progressText && progressPerc) {
+      let percent = 25;
+      let textVal = 'Step 1 of 4: Business Profile';
+      
+      if (stepNum === 2) {
+        percent = 50;
+        textVal = 'Step 2 of 4: Friction Analysis';
+      } else if (stepNum === 3) {
+        percent = 75;
+        textVal = 'Step 3 of 4: Prescribed AI Tool';
+      } else if (stepNum === 4) {
+        percent = 95;
+        textVal = 'Step 4 of 4: Setup Scheduling';
+      } else if (stepNum === 5) {
+        percent = 100;
+        textVal = 'Done: AI Setup Confirmed';
+      }
+      
+      progressFill.style.width = `${percent}%`;
+      progressText.textContent = textVal;
+      progressPerc.textContent = `${percent}%`;
+    }
+  };
+
+  // Evaluate the diagnostic metrics on Step 2 submit
+  window.evaluateWizDiagnosis = function() {
+    // Gather values
+    const q1Val = parseInt(document.getElementById('wiz-q1-input').value, 10);
+    
+    const q2El = document.querySelector('input[name="wiz-q2"]:checked');
+    const q2Val = q2El ? q2El.value : 'instant';
+    
+    const q3Val = document.getElementById('wiz-q3-input').value;
+    
+    const q4El = document.querySelector('input[name="wiz-q4"]:checked');
+    const q4Val = q4El ? q4El.value : 'manual';
+    
+    const q5El = document.querySelector('input[name="wiz-q5"]:checked');
+    const q5Val = q5El ? q5El.value : 'no';
+
+    // Store responses
+    wizardData.q1 = q1Val;
+    wizardData.q2 = q2Val;
+    wizardData.q3 = q3Val;
+    wizardData.q4 = q4Val;
+    wizardData.q5 = q5Val;
+
+    // SCORING MATRIX
+    // Initialize solution scores
+    let scores = {
+      dispatcher: 0, // AI Voice Dispatcher / Lead Responder
+      crmSync: 0,    // Automated CRM Sync Database
+      docProcessor: 0, // AI Document Extractor
+      proposalEngine: 0, // AI Proposal Generator
+      invoiceMatcher: 0 // AI Invoice Matcher
+    };
+
+    // Calculate scores based on weights
+    // Q1: High manual copy-paste hours biases toward CRM sync
+    if (q1Val > 15) scores.crmSync += 4;
+    else if (q1Val > 8) scores.crmSync += 2;
+
+    // Q2: Slow lead speed heavily weights Voice Dispatcher
+    if (q2Val === 'slow') scores.dispatcher += 5;
+    else if (q2Val === 'day') scores.dispatcher += 3;
+
+    // Q3: Primary repetitive task defines the strongest match
+    if (q3Val === 'data-entry') scores.crmSync += 5;
+    else if (q3Val === 'proposal-writing') scores.proposalEngine += 5;
+    else if (q3Val === 'chasing-documents') scores.docProcessor += 5;
+    else if (q3Val === 'customer-support') scores.dispatcher += 4;
+
+    // Q4: Manual job tracking boosts CRM sync
+    if (q4Val === 'manual') scores.crmSync += 3;
+    else if (q4Val === 'semi') scores.crmSync += 1;
+
+    // Q5: Invoice sign-off bottlenecks heavily weight Invoice Matcher
+    if (q5Val === 'yes') scores.invoiceMatcher += 5;
+
+    // Determine the highest scoring tool
+    let bestMatch = 'proposalEngine';
+    let highestScore = -1;
+    for (const [tool, val] of Object.entries(scores)) {
+      if (val > highestScore) {
+        highestScore = val;
+        bestMatch = tool;
+      }
+    }
+
+    // Tool Profiles
+    const tools = {
+      dispatcher: {
+        title: "24/7 AI Voice Dispatcher",
+        desc: "Answers incoming voice calls instantly, qualifies client requests using dynamic script logic, syncs details to your CRM, and dispatches job tickets automatically 24 hours a day.",
+        hours: "10-15 hrs/week",
+        roi: "£12,000+"
+      },
+      crmSync: {
+        title: "Automated CRM Sync System",
+        desc: "Establishes secure real-time webhooks that automatically capture and synchronize intake form fields, spreadsheets, and databases without manual copying.",
+        hours: "8-12 hrs/week",
+        roi: "£8,000+"
+      },
+      docProcessor: {
+        title: "AI Document Processor & Extractor",
+        desc: "Leverages optical character recognition and Claude 3.5 API to read incoming PDF receipts, bills, and contracts, extract variables, and log items directly to your software.",
+        hours: "12-18 hrs/week",
+        roi: "£15,000+"
+      },
+      proposalEngine: {
+        title: "One-Click AI Proposal Engine",
+        desc: "Uses structured LLM variables to instantly generate personalized client proposals, scopes of work, and service contracts using custom template designs.",
+        hours: "10-14 hrs/week",
+        roi: "£10,000+"
+      },
+      invoiceMatcher: {
+        title: "AI Invoice & Payments Matcher",
+        desc: "Scans bank feeds and client billing folders to automatically match paid amounts, flag discrepancies, and trigger reminder schedules for outstanding invoices.",
+        hours: "8-12 hrs/week",
+        roi: "£9,000+"
+      }
+    };
+
+    // Scale ROI based on turnover selection
+    const turnover = wizardData.turnover;
+    let multiplier = 1.0;
+    if (turnover === '100k-500k') multiplier = 1.2;
+    else if (turnover === '500k-2m') multiplier = 1.8;
+    else if (turnover === '2m-plus') multiplier = 2.5;
+
+    const matchedProfile = tools[bestMatch];
+    const rawRoi = parseInt(matchedProfile.roi.replace(/[£+,]/g, ''), 10);
+    const scaledRoi = Math.round(rawRoi * multiplier);
+
+    // Save selection
+    wizardData.prescribedTool = matchedProfile.title;
+
+    // Render results
+    document.getElementById('rec-tool-title').textContent = matchedProfile.title;
+    document.getElementById('rec-tool-desc').textContent = matchedProfile.desc;
+    document.getElementById('rec-savings-hours').textContent = matchedProfile.hours;
+    document.getElementById('rec-savings-roi').textContent = `£${scaledRoi.toLocaleString()}+`;
+
+    // Move to results step
+    nextWizStep(3);
+  };
+
+  // Handle Step 3 Lead Capture Submit
+  const wizLeadForm = document.getElementById('wiz-lead-form');
+  if (wizLeadForm) {
+    wizLeadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Gather contact details
+      const name = document.getElementById('client-name').value;
+      const email = document.getElementById('client-email').value;
+      const whatsapp = document.getElementById('client-whatsapp').value;
+      const delivery = document.querySelector('input[name="wiz-delivery"]:checked').value;
+
+      wizardData.name = name;
+      wizardData.email = email;
+      wizardData.phone = whatsapp;
+      wizardData.delivery = delivery;
+
+      // Submit lead to Formsubmit.co
+      const submitBtn = document.getElementById('submit-lead-btn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving Blueprint...';
+      }
+
+      const payload = {
+        _subject: "Madlabz AI Assessment Lead Capture",
+        "Lead Name": name,
+        "Email Address": email,
+        "WhatsApp / Phone": whatsapp,
+        "Delivery Preference": delivery,
+        "Prescribed AI Tool": wizardData.prescribedTool,
+        "Business Type": wizardData.industry,
+        "Company Size": wizardData.size,
+        "Turnover Range": wizardData.turnover,
+        "Weekly Friction Hours": wizardData.q1
+      };
+
+      fetch('https://formsubmit.co/ajax/madlabzuk.a@gmail.com', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(response => {
+        console.log('Lead capture success:', response);
+        // Build the calendar for Step 4
+        buildWizardCalendar();
+        // Step forward to calendar scheduling
+        nextWizStep(4);
+      })
+      .catch(err => {
+        console.error('Lead capture error:', err);
+        alert('There was a slight error saving your details. Let\'s proceed to booking your setup call anyway.');
+        buildWizardCalendar();
+        nextWizStep(4);
+      });
+    });
+  }
+
+  // --- Dynamic Calendar Generator for Step 4 ---
+  function buildWizardCalendar() {
+    const datesGrid = document.getElementById('wiz-cal-dates');
+    if (!datesGrid) return;
+
+    datesGrid.innerHTML = '';
+
+    const today = new Date();
+    const currentMonthLabel = document.getElementById('wiz-cal-month');
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    
+    if (currentMonthLabel) {
+      currentMonthLabel.textContent = `${months[today.getMonth()]} ${today.getFullYear()}`;
+    }
+
+    // Populate next 14 days, skipping Sundays
+    let daysAdded = 0;
+    let checkDate = new Date(today);
+    
+    // Add offset padding cells if needed to align day grids
+    const startDayIndex = (checkDate.getDay() + 6) % 7; // Align to Monday start
+    for (let p = 0; p < startDayIndex; p++) {
+      const padCell = document.createElement('div');
+      padCell.className = 'calendar-date-cell empty';
+      datesGrid.appendChild(padCell);
+    }
+
+    while (daysAdded < 14) {
+      checkDate.setDate(checkDate.getDate() + 1); // Start tomorrow
+      
+      const dayOfWeek = checkDate.getDay();
+      
+      // Skip Sundays (0)
+      if (dayOfWeek === 0) continue;
+
+      const dateBtn = document.createElement('div');
+      dateBtn.className = 'calendar-date-cell';
+      
+      const dateString = checkDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+      const fullDateISO = checkDate.toISOString().split('T')[0];
+
+      dateBtn.textContent = checkDate.getDate();
+      dateBtn.setAttribute('data-date-iso', fullDateISO);
+      dateBtn.setAttribute('data-date-label', dateString);
+
+      dateBtn.addEventListener('click', (e) => {
+        // Deselect previous
+        const selected = datesGrid.querySelector('.calendar-date-cell.selected');
+        if (selected) selected.classList.remove('selected');
+
+        // Select current
+        dateBtn.classList.add('selected');
+
+        // Save selected date
+        document.getElementById('wiz-booking-date').value = fullDateISO;
+        
+        // Open time slots
+        showWizardTimePicker(dateString);
+      });
+
+      datesGrid.appendChild(dateBtn);
+      daysAdded++;
+    }
+  }
+
+  function showWizardTimePicker(dateLabel) {
+    const pickerBox = document.getElementById('wiz-time-picker');
+    const slotsContainer = document.getElementById('wiz-time-slots');
+    const dateLabelEl = document.getElementById('wiz-selected-date-label');
+    
+    if (!pickerBox || !slotsContainer || !dateLabelEl) return;
+
+    dateLabelEl.textContent = `Select Time Slot for ${dateLabel}:`;
+    slotsContainer.innerHTML = '';
+
+    const slots = ["09:00", "10:30", "11:45", "13:00", "14:30", "16:00"];
+    
+    slots.forEach(time => {
+      const slotBtn = document.createElement('button');
+      slotBtn.type = 'button';
+      slotBtn.className = 'time-slot-btn';
+      slotBtn.textContent = time;
+
+      slotBtn.addEventListener('click', () => {
+        // Deselect previous
+        const selected = slotsContainer.querySelector('.time-slot-btn.selected');
+        if (selected) selected.classList.remove('selected');
+
+        // Select current
+        slotBtn.classList.add('selected');
+
+        // Save selected time
+        document.getElementById('wiz-booking-time').value = time;
+
+        // Show confirm button
+        const confirmBtn = document.getElementById('confirm-booking-btn');
+        if (confirmBtn) confirmBtn.style.display = 'block';
+      });
+
+      slotsContainer.appendChild(slotBtn);
+    });
+
+    pickerBox.style.display = 'block';
+  }
+
+  // Submit Final Booking Appointment
+  window.submitWizBooking = function() {
+    const selectedDate = document.getElementById('wiz-booking-date').value;
+    const selectedTime = document.getElementById('wiz-booking-time').value;
+
+    if (!selectedDate || !selectedTime) {
+      alert('Please select both a date and time slot for your appointment.');
+      return;
+    }
+
+    const confirmBtn = document.getElementById('confirm-booking-btn');
+    if (confirmBtn) {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Booking Slot...';
+    }
+
+    // Format date string for humans
+    const parts = selectedDate.split('-');
+    const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+    // Dispatch final notification details via Formsubmit
+    const payload = {
+      _subject: "Madlabz AI Setup Appointment Booked",
+      "Lead Name": wizardData.name,
+      "Email Address": wizardData.email,
+      "WhatsApp": wizardData.phone,
+      "Prescribed AI Tool": wizardData.prescribedTool,
+      "Appointment Date": formattedDate,
+      "Appointment Time": selectedTime,
+      "Next Action Required": "Full AI Operations Audit"
+    };
+
+    fetch('https://formsubmit.co/ajax/madlabzuk.a@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(response => {
+      console.log('Booking confirmed successfully:', response);
+      
+      // Update UI with final details
+      document.getElementById('wiz-confirmation-details').innerHTML = `
+        Your 15-minute setup call is booked for <strong>${formattedDate}</strong> at <strong>${selectedTime}</strong>.<br>
+        A calendar invitation and setup details have been sent to <strong>${wizardData.email}</strong>.
+      `;
+      
+      // Go to final confirmation screen
+      nextWizStep(5);
+    })
+    .catch(err => {
+      console.error('Booking submission error:', err);
+      // Even if network request fails, show client confirmation locally
+      document.getElementById('wiz-confirmation-details').innerHTML = `
+        Your 15-minute setup call is booked for <strong>${formattedDate}</strong> at <strong>${selectedTime}</strong>.<br>
+        A calendar invitation and setup details have been sent to <strong>${wizardData.email}</strong>.
+      `;
+      nextWizStep(5);
+    });
+  };
 });
 

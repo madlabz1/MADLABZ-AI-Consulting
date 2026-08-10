@@ -28,10 +28,10 @@
             <li><a href="#blueprint">Our Blueprint</a></li>
             <li><a href="#roi-calculator">ROI Calculator</a></li>
             <li><a href="#pricing">Audit Packages</a></li>
-            <li><a href="#booking">Book Audit</a></li>
+            <li><a href="#assessment-section">Free AI Assessment</a></li>
           </ul>
         </nav>
-        <a href="#booking" class="btn btn-primary" id="nav-cta-btn" onclick="selectPackage('mini-audit')">Free 15-Min Audit</a>
+        <a href="#assessment-section" class="btn btn-primary" id="nav-cta-btn" onclick="startAssessment()">⚡ Start Free AI Assessment</a>
       </div>
     </div>
   </header>
@@ -41,13 +41,13 @@
     <div class="container">
       <div class="grid-2 hero-grid">
         <div class="hero-text-content">
-          <div class="hero-badge" id="hero-announcement">Clarity Over Hype • Zero Risk • 15 Minutes</div>
-          <h1 id="hero-heading">We Hunt Down Bottlenecks.<br>You Get Real <span class="gradient-text">AI ROI</span>.</h1>
+          <div class="hero-badge" id="hero-announcement">Clarity Over Hype • Zero Risk • Online in 2 Mins</div>
+          <h1 id="hero-heading">Is AI a Gimmick?<br>Find Your Real <span class="gradient-text">AI Solution</span>.</h1>
           <p class="subtitle" id="hero-lead">
-            We conduct rigorous AI audits for professional services, agencies, real estate, and trade-based businesses to identify, prescribe, and scale automated workflows. Start with our <strong>Free 15-Minute Mini AI Audit</strong>.
+            Take our free interactive assessment online now. Profile your business size, turnover, and bottlenecks to identify the exact high-ROI AI tool that will return hours to your team.
           </p>
           <div class="hero-actions" id="hero-buttons">
-            <a href="#pricing" class="btn btn-primary" style="background: var(--accent-gradient);" id="hero-free-audit-cta" onclick="selectPackage('mini-audit')">⚡ Claim Free 15-Min Audit</a>
+            <a href="#assessment-section" class="btn btn-primary" style="background: var(--accent-gradient); box-shadow: var(--shadow-glow);" id="hero-free-audit-cta" onclick="startAssessment()">⚡ Start Free Assessment Online</a>
             <a href="#roi-calculator" class="btn btn-secondary" id="hero-primary-cta">Calculate Your Savings</a>
           </div>
         </div>
@@ -289,76 +289,270 @@
     </div>
   </section>
 
-  <!-- Booking Section -->
-  <section class="section" id="booking">
+  <!-- Interactive Online AI Assessment Wizard Section -->
+  <section class="section" id="assessment-section" style="scroll-margin-top: 5rem;">
     <div class="container">
-      <div class="contact-box reveal" id="booking-box">
-        <h2 style="text-align: center; margin-bottom: 1rem;" id="booking-title">Schedule Your AI Audit</h2>
-        <p class="subtitle" style="text-align: center; margin: 0 auto 3rem auto;" id="booking-subtitle">Fill in your business details. We will reach out to organize your stakeholder and employee interviews.</p>
+      <div class="contact-box reveal" id="wizard-box" style="max-width: 800px; margin: 0 auto;">
         
-        <form id="audit-booking-form">
-          <div class="form-grid">
-            
-            <div class="form-group" id="group-name">
-              <label for="client-name">Your Full Name</label>
-              <input type="text" id="client-name" required placeholder="e.g. John Doe">
-            </div>
-
-            <div class="form-group" id="group-email">
-              <label for="client-email">Business Email</label>
-              <input type="email" id="client-email" required placeholder="e.g. john@company.com">
-            </div>
-
-            <div class="form-group" id="group-company">
-              <label for="client-company">Company Name</label>
-              <input type="text" id="client-company" required placeholder="e.g. Acme Manufacturing">
-            </div>
-
-            <div class="form-group" id="group-size">
-              <label for="client-size">Company Size</label>
-              <select id="client-size" required>
-                <option value="" disabled selected>Select size...</option>
-                <option value="mini">1-10 Staff / Micro (Free 15-Min Audit)</option>
-                <option value="smb">Small-Medium (10-50 employees)</option>
-                <option value="enterprise">Medium-Large (50-200+ employees)</option>
-              </select>
-            </div>
-
-            <div class="form-group" id="group-industry">
-              <label for="client-industry">Primary Industry</label>
-              <select id="client-industry" required>
-                <option value="" disabled selected>Select industry...</option>
-                <option value="professional-services">Professional Services (Accounting, Law, Finance)</option>
-                <option value="agencies">Creative & Digital Agencies (Web, Marketing)</option>
-                <option value="realestate-mortgages">Real Estate, Mortgage & Property Management</option>
-                <option value="trades-contracting">Trades, Construction & Contracting</option>
-                <option value="health-wellness">Health, Wellness & Professional Care</option>
-                <option value="retail-hospitality">Retail, E-commerce & Hospitality</option>
-                <option value="other">Other Business Sector</option>
-              </select>
-            </div>
-
-            <div class="form-group" id="group-package">
-              <label for="client-package">Audit Package Selected</label>
-              <select id="client-package" required>
-                <option value="mini-audit" selected>Free 15-Minute Mini AI Audit</option>
-                <option value="smb-audit">SMB AI Audit (Detailed Deep Dive)</option>
-                <option value="ent-audit">Enterprise AI Audit (Multi-Department)</option>
-              </select>
-            </div>
-
-            <div class="form-group full-width" id="group-message">
-              <label for="client-message">Describe Your Primary Bottlenecks / Repetitive Workflows</label>
-              <textarea id="client-message" rows="4" placeholder="Describe manual steps, software frustrations, or admin processes that waste employee hours..."></textarea>
-            </div>
-
+        <!-- Progress Bar & Indicator -->
+        <div class="wizard-progress-container" style="margin-bottom: 2.5rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+            <span id="wizard-progress-text">Step 1 of 4: Business Profile</span>
+            <span id="wizard-progress-percentage">25%</span>
           </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 10px; padding: 1rem;" id="submit-booking-btn">Submit Audit Request</button>
-        </form>
+          <div class="wizard-progress-bar" style="width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden;">
+            <div id="wizard-progress-fill" style="width: 25%; height: 100%; background: var(--accent-gradient); transition: width 0.4s ease;"></div>
+          </div>
+        </div>
 
-        <div id="booking-success-message" style="display: none; margin-top: 2rem; text-align: center; padding: 1.5rem; background: rgba(0, 240, 255, 0.1); border: 1px solid var(--accent-cyan); border-radius: 10px; color: var(--text-main);">
-          <h3>Request Successfully Received!</h3>
-          <p style="margin-top: 0.5rem; font-size: 0.95rem; color: var(--text-muted);">An AI strategist from MADLABZ will contact you within 24 hours to schedule the discovery interviews.</p>
+        <div class="wizard-steps-wrapper">
+          
+          <!-- STEP 1: Business Profile -->
+          <div class="wizard-step active" id="wiz-step-1">
+            <h2 style="text-align: center; margin-bottom: 0.5rem;">Step 1: Your Business Profile</h2>
+            <p class="subtitle" style="text-align: center; margin: 0 auto 2.5rem auto; font-size: 0.95rem;">Select your industry and company scale to customize your diagnostic audit.</p>
+            
+            <div class="form-grid">
+              <div class="form-group" id="wiz-group-industry">
+                <label for="wiz-industry">Primary Industry</label>
+                <select id="wiz-industry" required>
+                  <option value="" disabled selected>Select industry...</option>
+                  <option value="professional-services">Professional Services (Accounting, Law, Finance)</option>
+                  <option value="agencies">Creative & Digital Agencies (Web, Marketing)</option>
+                  <option value="realestate-mortgages">Real Estate, Mortgage & Property Management</option>
+                  <option value="trades-contracting">Trades, Construction & Contracting</option>
+                  <option value="other">Other Business Sector</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="wiz-group-size">
+                <label for="wiz-size">Company Size</label>
+                <select id="wiz-size" required>
+                  <option value="" disabled selected>Select staff count...</option>
+                  <option value="mini">1-10 Employees / Micro</option>
+                  <option value="smb">10-50 Employees / Small-Medium</option>
+                  <option value="enterprise">50-200+ Employees / Enterprise</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width" id="wiz-group-turnover">
+                <label for="wiz-turnover">Annual Turnover</label>
+                <select id="wiz-turnover" required>
+                  <option value="" disabled selected>Select annual turnover range...</option>
+                  <option value="under-100k">Under £100k</option>
+                  <option value="100k-500k">£100k - £500k</option>
+                  <option value="500k-2m">£500k - £2m</option>
+                  <option value="2m-plus">£2m+</option>
+                </select>
+              </div>
+            </div>
+            
+            <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 2rem;" onclick="nextWizStep(2)">Next: Diagnostic Questions ➔</button>
+          </div>
+
+          <!-- STEP 2: The 5 Targeted Questions -->
+          <div class="wizard-step" id="wiz-step-2" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 0.5rem;">Step 2: 5 Core Friction Questions</h2>
+            <p class="subtitle" style="text-align: center; margin: 0 auto 2.5rem auto; font-size: 0.95rem;">Answer these questions to locate your operational gaps.</p>
+            
+            <div class="wizard-questions-container" style="display: flex; flex-direction: column; gap: 2rem;">
+              
+              <!-- Question 1 -->
+              <div class="wiz-question-card" style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: 12px;">
+                <p style="font-weight: 600; margin-bottom: 1rem; font-size: 0.95rem;">1. How many hours per week does your team spend manually copying/pasting data between systems?</p>
+                <div class="slider-group">
+                  <div class="slider-header" style="margin-bottom: 0.5rem;">
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Estimated Weekly Hours</span>
+                    <span class="slider-value" id="wiz-q1-val" style="color: var(--accent-cyan); font-weight: 700;">5 hrs</span>
+                  </div>
+                  <input type="range" id="wiz-q1-input" min="0" max="25" value="5" step="1" oninput="document.getElementById('wiz-q1-val').textContent = this.value + ' hrs'" style="width: 100%;">
+                </div>
+              </div>
+
+              <!-- Question 2 -->
+              <div class="wiz-question-card" style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: 12px;">
+                <p style="font-weight: 600; margin-bottom: 1rem; font-size: 0.95rem;">2. How long does it take for a new incoming lead/client inquiry to get a qualified response?</p>
+                <div class="radio-choices-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+                  <label class="radio-card" style="display: flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-q2" value="instant" checked>
+                    <span style="font-size: 0.85rem;">⚡ Under 5 mins</span>
+                  </label>
+                  <label class="radio-card" style="display: flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-q2" value="hour">
+                    <span style="font-size: 0.85rem;">⏱️ Under 1 hour</span>
+                  </label>
+                  <label class="radio-card" style="display: flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-q2" value="day">
+                    <span style="font-size: 0.85rem;">📅 1 to 24 hours</span>
+                  </label>
+                  <label class="radio-card" style="display: flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-q2" value="slow">
+                    <span style="font-size: 0.85rem;">🐢 Over 24 hours</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Question 3 -->
+              <div class="wiz-question-card" style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: 12px;">
+                <p style="font-weight: 600; margin-bottom: 1rem; font-size: 0.95rem;">3. What is the most repetitive task your staff complains about daily?</p>
+                <select id="wiz-q3-input" required style="width: 100%; padding: 0.8rem 1rem; background: rgba(13,11,24,0.6); border: 1px solid var(--glass-border); border-radius: 8px; color: #fff;">
+                  <option value="data-entry" selected>Manual data entry / copy-pasting forms</option>
+                  <option value="proposal-writing">Drafting proposals, contracts, or client reports</option>
+                  <option value="chasing-documents">Chasing missing client files, statements, or signatures</option>
+                  <option value="customer-support">Handling repetitive customer FAQ support tickets</option>
+                </select>
+              </div>
+
+              <!-- Question 4 -->
+              <div class="wiz-question-card" style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: 12px;">
+                <p style="font-weight: 600; margin-bottom: 1rem; font-size: 0.95rem;">4. How do you track jobs, customer tasks, or active project schedules?</p>
+                <div class="radio-choices-grid" style="display: grid; grid-template-columns: 1fr; gap: 0.8rem;">
+                  <label class="radio-card" style="display: flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-q4" value="manual" checked>
+                    <span style="font-size: 0.85rem;">📝 Excel spreadsheets / paper folders / email tags</span>
+                  </label>
+                  <label class="radio-card" style="display: flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-q4" value="semi">
+                    <span style="font-size: 0.85rem;">📋 Trello / Asana / simple CRM software</span>
+                  </label>
+                  <label class="radio-card" style="display: flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-q4" value="auto">
+                    <span style="font-size: 0.85rem;">🤖 Fully automated CRM database / sync system</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Question 5 -->
+              <div class="wiz-question-card" style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: 12px;">
+                <p style="font-weight: 600; margin-bottom: 1rem; font-size: 0.95rem;">5. Does your team struggle to get client invoice sign-offs and payments settled on time?</p>
+                <div style="display: flex; gap: 1rem;">
+                  <label class="radio-card" style="flex: 1; display: flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-q5" value="yes" checked>
+                    <span style="font-size: 0.85rem;">Yes, frequently</span>
+                  </label>
+                  <label class="radio-card" style="flex: 1; display: flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-q5" value="no">
+                    <span style="font-size: 0.85rem;">No, rarely</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+
+            <div style="display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.5rem;">
+              <button type="button" class="btn btn-secondary" onclick="nextWizStep(1)" style="flex: 1;">Back</button>
+              <button type="button" class="btn btn-primary" onclick="evaluateWizDiagnosis()" style="flex: 2;">Analyze Bottlenecks ➔</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Prescribed AI Tool & Delivery Form -->
+          <div class="wizard-step" id="wiz-step-3" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 0.5rem;">Step 3: Your Prescribed AI Tool</h2>
+            <p class="subtitle" style="text-align: center; margin: 0 auto 2.5rem auto; font-size: 0.95rem;">Our diagnostic engine has matched your answers to a custom workflow automation.</p>
+            
+            <div class="prescribed-card" style="background: rgba(133,51,255,0.04); border: 1px solid var(--accent-purple); border-radius: 16px; padding: 2rem; margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(133, 51, 255, 0.1);">
+              <div style="font-family: var(--font-heading); font-size: 0.8rem; color: var(--accent-cyan); font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">⚡ HIGH-ROI RECOMMENDATION</div>
+              <h3 id="rec-tool-title" class="gradient-text" style="font-size: 1.8rem; margin-bottom: 0.75rem;">AI Proposal Engine</h3>
+              <p id="rec-tool-desc" style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+                Automatically generates customized proposals and service contracts by extracting intake form variables, reducing draft times from 2 hours to 10 seconds.
+              </p>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; margin-bottom: 2rem;">
+                <div>
+                  <span style="font-size: 0.78rem; color: var(--text-dim); display: block; text-transform: uppercase;">Estimated Savings</span>
+                  <strong id="rec-savings-hours" style="font-size: 1.4rem; color: var(--accent-cyan); font-family: var(--font-heading);">12 hrs/week</strong>
+                </div>
+                <div>
+                  <span style="font-size: 0.78rem; color: var(--text-dim); display: block; text-transform: uppercase;">Annualized ROI</span>
+                  <strong id="rec-savings-roi" style="font-size: 1.4rem; color: var(--accent-purple); font-family: var(--font-heading);">£15,000+</strong>
+                </div>
+              </div>
+
+              <!-- Lead Capture Form inside Result -->
+              <form id="wiz-lead-form">
+                <h4 style="font-size: 0.95rem; margin-bottom: 1rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem;">Receive the full setup blueprint for this tool:</h4>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="client-name">Your Full Name</label>
+                    <input type="text" id="client-name" required placeholder="e.g. John Doe">
+                  </div>
+                  <div class="form-group">
+                    <label for="client-email">Business Email</label>
+                    <input type="email" id="client-email" required placeholder="e.g. john@company.com">
+                  </div>
+                  <div class="form-group full-width">
+                    <label for="client-whatsapp">Phone / WhatsApp Number</label>
+                    <input type="tel" id="client-whatsapp" required placeholder="e.g. +44 7700 900077">
+                  </div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; margin: 1.5rem 0;">
+                  <label class="radio-card" style="flex: 1; display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-delivery" value="whatsapp" checked>
+                    <span style="font-size: 0.85rem;">Send to WhatsApp</span>
+                  </label>
+                  <label class="radio-card" style="flex: 1; display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem; border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="wiz-delivery" value="email">
+                    <span style="font-size: 0.85rem;">Send to Email</span>
+                  </label>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 8px; padding: 1rem;" id="submit-lead-btn">⚡ Claim Setup Blueprint</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- STEP 4: Setup Booking Calendar -->
+          <div class="wizard-step" id="wiz-step-4" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 0.5rem;">Step 4: Book Your Tool Setup Call</h2>
+            <p class="subtitle" style="text-align: center; margin: 0 auto 2.5rem auto; font-size: 0.95rem;">Schedule a free 15-minute screen-share to implement your AI tool. A full operations AI Audit will follow post-setup.</p>
+            
+            <div class="calendar-wrapper" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <strong id="wiz-cal-month" style="font-size: 1.05rem;">August 2026</strong>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0.5rem; font-weight: 600;">
+                <div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div>
+              </div>
+              <div id="wiz-cal-dates" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center;">
+                <!-- Dates generated by script -->
+              </div>
+            </div>
+
+            <!-- Time Picker -->
+            <div id="wiz-time-picker" style="display: none; margin-bottom: 1.5rem; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: 12px;">
+              <h4 style="font-size: 0.9rem; margin-bottom: 1rem; color: var(--text-muted);" id="wiz-selected-date-label">Select Time Slot:</h4>
+              <div id="wiz-time-slots" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+                <!-- Time slots generated by script -->
+              </div>
+            </div>
+
+            <input type="hidden" id="wiz-booking-date">
+            <input type="hidden" id="wiz-booking-time">
+
+            <button type="button" class="btn btn-primary" id="confirm-booking-btn" style="width: 100%; display: none;" onclick="submitWizBooking()">Confirm Setup Appointment ➔</button>
+          </div>
+
+          <!-- STEP 5: Final Screen -->
+          <div class="wizard-step" id="wiz-step-5" style="display: none;">
+            <div style="text-align: center; padding: 2rem 0;">
+              <div style="font-size: 3.5rem; margin-bottom: 1.5rem;">🎉</div>
+              <h2 style="margin-bottom: 0.5rem;">Setup Call Confirmed!</h2>
+              <p id="wiz-confirmation-details" style="color: var(--text-muted); font-size: 0.95rem; max-width: 550px; margin: 0 auto 2.5rem auto; line-height: 1.5;">
+                Your 15-minute setup call is booked. A calendar invite and WhatsApp confirmation has been dispatched.
+              </p>
+              
+              <div style="background: linear-gradient(135deg, rgba(133,51,255,0.1) 0%, rgba(0,240,255,0.1) 100%); border: 1px solid var(--accent-purple); padding: 1.5rem; border-radius: 12px; text-align: left; max-width: 550px; margin: 0 auto;">
+                <h4 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.05rem;">📋 What Happens Next?</h4>
+                <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1rem;">
+                  1. **First Implementation:** During our call, we will install and configure your recommended AI tool for your team.  
+                  2. **Full Operations Audit:** Once your first tool is active and saving time, we will run our comprehensive **SME AI Audit** mapping all multi-department bottlenecks.
+                </p>
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; font-size: 0.82rem; color: var(--accent-cyan); font-weight: 600;">
+                  ⚡ Full AI Audit reminder notifications and prep worksheets will be sent to your email.
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -377,7 +571,7 @@
           <li><a href="#why-fail">Philosophy</a></li>
           <li><a href="#blueprint">Blueprint</a></li>
           <li><a href="#roi-calculator">ROI Calc</a></li>
-          <li><a href="#booking">Booking</a></li>
+          <li><a href="#assessment-section">Free Assessment</a></li>
         </ul>
       </div>
     </div>

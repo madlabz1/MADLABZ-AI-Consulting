@@ -1134,3 +1134,119 @@ footer {
     bottom: 70px;
   }
 }
+
+/* ==========================================================================
+   Interactive AI Assessment Wizard & Calendar Styles
+   ========================================================================== */
+
+.wizard-progress-container {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+}
+
+.wizard-step {
+  animation: fadeInStep 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInStep {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Radio Cards (Selectable blocks) */
+.radio-card {
+  transition: var(--transition-smooth);
+}
+
+.radio-card:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.radio-card input[type="radio"] {
+  accent-color: var(--accent-cyan);
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+/* Calendar Date Grid */
+.calendar-date-cell {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 0.6rem 0;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  user-select: none;
+}
+
+.calendar-date-cell:hover:not(.disabled):not(.empty) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent-purple);
+  transform: translateY(-2px);
+}
+
+.calendar-date-cell.selected {
+  background: var(--blue-purple-gradient) !important;
+  border-color: var(--accent-purple) !important;
+  color: #fff !important;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(133, 51, 255, 0.3);
+}
+
+.calendar-date-cell.disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.calendar-date-cell.empty {
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+/* Time Slots Picker */
+.time-slot-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  padding: 0.75rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: var(--transition-fast);
+}
+
+.time-slot-btn:hover:not(.selected) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent-cyan);
+  color: var(--text-main);
+}
+
+.time-slot-btn.selected {
+  background: var(--accent-gradient) !important;
+  border-color: var(--accent-cyan) !important;
+  color: #0c0a21 !important;
+  font-weight: 700;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+}
+
+/* Form inputs focus within wizard */
+.wizard-step select:focus {
+  border-color: var(--accent-cyan) !important;
+  outline: none;
+}
+
+.wizard-step input[type="text"]:focus,
+.wizard-step input[type="email"]:focus,
+.wizard-step input[type="tel"]:focus {
+  border-color: var(--accent-cyan);
+}
+
